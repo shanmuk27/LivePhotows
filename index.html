@@ -438,7 +438,7 @@
 //  CONFIG — set your Synology API URL
 // ─────────────────────────────────────────────────────────────────────────────
 const API_BASE = 'https://supriyadigitals.store/gallery/api.php';
-const ADMIN_TOKEN = 'X9v#L2q@8Mz!T7p$Wc4&Yn1^Rb6*Kd3Hs'; // same as config.php UPLOAD_TOKEN
+const ADMIN_TOKEN = 'X9v#L2q@8Mz!T7p$Wc4&Yn1^Rb6*Kd3HsF'; // same as config.php UPLOAD_TOKEN
 
 // Derive gallery name from URL hostname (strip common prefixes/suffixes)
 function deriveGalleryName() {
@@ -504,7 +504,7 @@ function AdminLogin({ onAuth }) {
   function attempt(e) {
     e.preventDefault();
     // Client-side check (real check is on server token)
-    if (user === 'admin' && pass.length >= 6) {
+    if (user === 'Shanmuk27' && pass.length >= 6) {
       onAuth(pass);
     } else {
       setErr('Invalid credentials');
@@ -765,7 +765,7 @@ function AdminPanel({ onClose, token }) {
                 <div className="recent-strip">
                   {s.images.recent.map((img,i) => (
                     <img key={i} className="recent-thumb"
-                      src={`https://your-tunnel.example.com/gallery/photos/${img.filename}`}
+                      src={`https://supriyadigitals.store/gallery/photos/${img.filename}`}
                       alt={img.filename}
                     />
                   ))}
