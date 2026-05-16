@@ -8,15 +8,19 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:      #f5f5f5;
-    --surface: #ffffff;
-    --border:  #e0e0e0;
-    --text:    #1a1a1a;
-    --dim:     #666;
-    --accent:  #2563eb;
-    --danger:  #dc2626;
-    --success: #16a34a;
-    --radius:  8px;
+    --bg:        #f5f5f5;
+    --surface:   #ffffff;
+    --border:    #e0e0e0;
+    --text:      #1a1a1a;
+    --dim:       #666;
+    --accent:    #2563eb;
+    --danger:    #dc2626;
+    --success:   #16a34a;
+    --warn:      #d97706;
+    --radius:    8px;
+    --connected: #16a34a;
+    --idle:      #d97706;
+    --disconn:   #9ca3af;
   }
 
   body {
@@ -52,8 +56,7 @@
     width: 100%; padding: 10px;
     background: var(--accent); color: #fff;
     border: none; border-radius: 6px; font-size: .9rem;
-    cursor: pointer; font-weight: 500;
-    transition: opacity .2s;
+    cursor: pointer; font-weight: 500; transition: opacity .2s;
   }
   .btn-primary:hover { opacity: .88; }
   #login-error { color: var(--danger); font-size: .8rem; margin-top: 10px; text-align: center; display:none; }
@@ -70,14 +73,13 @@
   header .right { display: flex; align-items: center; gap: 12px; color: var(--dim); font-size: .82rem; }
   #logout-btn {
     background: none; border: 1px solid var(--border); border-radius: 5px;
-    padding: 5px 12px; cursor: pointer; color: var(--dim);
-    font-size: .78rem;
+    padding: 5px 12px; cursor: pointer; color: var(--dim); font-size: .78rem;
   }
   #logout-btn:hover { border-color: var(--danger); color: var(--danger); }
 
   /* ── Stats bar ── */
   .stats-bar {
-    display: flex; gap: 16px; padding: 16px 24px;
+    display: flex; gap: 16px; padding: 16px 24px; flex-wrap: wrap;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
@@ -88,6 +90,86 @@
   }
   .stat .val { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
   .stat .lbl { font-size: .75rem; color: var(--dim); margin-top: 2px; }
+
+  /* ── Camera section ── */
+  #camera-section {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .camera-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: .78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--dim);
+  }
+  .camera-header .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--connected);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .5; transform: scale(1.3); }
+  }
+  .camera-header .pulse-dot.no-cameras { background: var(--disconn); animation: none; }
+
+  #camera-list {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    padding: 12px 0 14px;
+  }
+  #camera-list:empty::after {
+    content: 'No cameras detected — start camera_monitor.py on your laptop';
+    color: var(--dim); font-size: .82rem; font-style: italic;
+  }
+
+  .camera-card {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px;
+    min-width: 260px; flex: 1; max-width: 400px;
+    transition: border-color .3s;
+  }
+  .camera-card.connected { border-color: #86efac; background: #f0fdf4; }
+  .camera-card.idle      { border-color: #fcd34d; background: #fffbeb; }
+  .camera-card.disconnected { opacity: .6; }
+
+  .cam-icon {
+    font-size: 1.6rem; flex-shrink: 0;
+    filter: grayscale(0);
+  }
+  .camera-card.disconnected .cam-icon { filter: grayscale(1); }
+
+  .cam-info { flex: 1; min-width: 0; }
+  .cam-name {
+    font-weight: 600; font-size: .88rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cam-sub { font-size: .72rem; color: var(--dim); margin-top: 1px; }
+
+  .cam-right { text-align: right; flex-shrink: 0; }
+  .cam-count { font-size: 1.3rem; font-weight: 700; line-height: 1; }
+  .cam-count.connected { color: var(--connected); }
+  .cam-count.idle      { color: var(--idle); }
+  .cam-count.disconnected { color: var(--disconn); }
+  .cam-count-lbl { font-size: .65rem; color: var(--dim); }
+
+  .cam-status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .68rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .04em; margin-top: 3px;
+  }
+  .cam-status-badge::before {
+    content: ''; display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .cam-status-badge.connected { color: var(--connected); }
+  .cam-status-badge.connected::before { background: var(--connected); }
+  .cam-status-badge.idle      { color: var(--idle); }
+  .cam-status-badge.idle::before { background: var(--idle); }
+  .cam-status-badge.disconnected { color: var(--disconn); }
+  .cam-status-badge.disconnected::before { background: var(--disconn); }
 
   /* ── Main layout ── */
   main { padding: 24px; max-width: 1200px; margin: 0 auto; }
@@ -120,8 +202,6 @@
   .status.uploading { color: var(--accent); }
   .status.done      { color: var(--success); }
   .status.fail      { color: var(--danger); }
-  .progress-bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 4px; }
-  .progress-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width .3s; }
 
   #upload-btn {
     margin-top: 14px; padding: 9px 24px;
@@ -206,10 +286,22 @@
     </div>
   </header>
 
+  <!-- Stats Bar -->
   <div class="stats-bar">
     <div class="stat"><div class="val" id="stat-total">—</div><div class="lbl">Total photos</div></div>
     <div class="stat"><div class="val" id="stat-size">—</div><div class="lbl">Storage used</div></div>
     <div class="stat"><div class="val" id="stat-time">—</div><div class="lbl">Last upload</div></div>
+    <div class="stat"><div class="val" id="stat-cam-count" style="color:var(--connected)">—</div><div class="lbl">Cameras online</div></div>
+  </div>
+
+  <!-- Camera Status Section -->
+  <div id="camera-section">
+    <div class="camera-header">
+      <span class="pulse-dot no-cameras" id="cam-pulse"></span>
+      Live Camera Status
+      <span id="cam-last-update" style="font-weight:400;text-transform:none;letter-spacing:0;margin-left:auto;font-size:.72rem"></span>
+    </div>
+    <div id="camera-list"></div>
   </div>
 
   <main>
@@ -242,15 +334,15 @@
 <script>
 const API = 'https://supriyadigitals.store/gallery/api.php';
 
-let password    = '';
-let pendingFiles = [];   // FileList items queued for upload
+let password     = '';
+let pendingFiles = [];
+let camPollTimer = null;
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function login() {
   const pass = document.getElementById('pass-input').value.trim();
   if (!pass) return;
 
-  // Test the password against the stats endpoint
   const res = await fetch(`${API}?action=stats&pass=${encodeURIComponent(pass)}`);
   if (!res.ok) {
     document.getElementById('login-error').style.display = 'block';
@@ -263,6 +355,7 @@ async function login() {
 }
 
 function logout() {
+  clearInterval(camPollTimer);
   localStorage.removeItem('gallery_pass');
   password = '';
   document.getElementById('app').style.display = 'none';
@@ -270,7 +363,6 @@ function logout() {
   document.getElementById('pass-input').value = '';
 }
 
-// Try auto-login from localStorage
 window.addEventListener('DOMContentLoaded', async () => {
   const saved = localStorage.getItem('gallery_pass');
   if (saved) {
@@ -281,6 +373,18 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('pass-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') login();
   });
+
+  // File picker events
+  const zone  = document.getElementById('drop-zone');
+  const input = document.getElementById('file-input');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    addFiles(e.dataTransfer.files);
+  });
+  input.addEventListener('change', () => addFiles(input.files));
 });
 
 function showApp() {
@@ -288,6 +392,9 @@ function showApp() {
   document.getElementById('app').style.display = 'block';
   loadStats();
   loadPhotos();
+  loadCameraStatus();
+  // Poll camera status every 15 seconds
+  camPollTimer = setInterval(loadCameraStatus, 15000);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
@@ -303,22 +410,78 @@ async function loadStats() {
     last ? timeAgo(last.uploaded_at) : 'Never';
 }
 
-// ── File picker & drag-drop ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const zone  = document.getElementById('drop-zone');
-  const input = document.getElementById('file-input');
+// ── Camera Status ─────────────────────────────────────────────────────────────
+async function loadCameraStatus() {
+  let data;
+  try {
+    const res = await fetch(`${API}?action=camera_status`);
+    if (!res.ok) return;
+    data = await res.json();
+  } catch {
+    return; // silently ignore network errors for camera status
+  }
 
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('drag-over');
-    addFiles(e.dataTransfer.files);
+  const cameras   = data.cameras ?? [];
+  const connected = data.connected_count ?? 0;
+  const list      = document.getElementById('camera-list');
+  const pulse     = document.getElementById('cam-pulse');
+  const countEl   = document.getElementById('stat-cam-count');
+  const lastUpd   = document.getElementById('cam-last-update');
+
+  // Update connected count stat
+  countEl.textContent = connected;
+  countEl.style.color = connected > 0 ? 'var(--connected)' : 'var(--disconn)';
+
+  // Pulse dot
+  if (connected > 0) {
+    pulse.classList.remove('no-cameras');
+  } else {
+    pulse.classList.add('no-cameras');
+  }
+
+  // Last update time
+  lastUpd.textContent = cameras.length > 0
+    ? `Updated ${timeAgo(data.server_time)}`
+    : '';
+
+  // Render camera cards
+  list.innerHTML = '';
+  cameras.forEach(cam => {
+    const card = document.createElement('div');
+    card.className = `camera-card ${cam.status}`;
+
+    const lastPhoto = cam.last_photo_at
+      ? `Last photo ${timeAgo(cam.last_photo_at)}`
+      : 'No photos yet this session';
+
+    const statusLabel = {
+      connected:    'Connected',
+      idle:         'Idle',
+      disconnected: 'Disconnected',
+    }[cam.status] ?? cam.status;
+
+    const countColor = cam.status === 'connected' ? 'connected'
+                     : cam.status === 'idle'      ? 'idle'
+                     :                              'disconnected';
+
+    card.innerHTML = `
+      <div class="cam-icon">📷</div>
+      <div class="cam-info">
+        <div class="cam-name">${escHtml(cam.camera_name)}</div>
+        <div class="cam-sub">${escHtml(lastPhoto)}</div>
+        <div class="cam-status-badge ${cam.status}">${statusLabel}</div>
+      </div>
+      <div class="cam-right">
+        <div class="cam-count ${countColor}">${cam.photos_session}</div>
+        <div class="cam-count-lbl">this session</div>
+        <div class="cam-count-lbl" style="margin-top:2px;color:var(--dim)">${cam.photos_total} total</div>
+      </div>
+    `;
+    list.appendChild(card);
   });
+}
 
-  input.addEventListener('change', () => addFiles(input.files));
-});
-
+// ── File picker & queue ───────────────────────────────────────────────────────
 function addFiles(fileList) {
   pendingFiles = [...pendingFiles, ...fileList];
   renderQueue();
@@ -378,7 +541,7 @@ async function uploadAll() {
 
   toast('Upload complete');
   loadStats();
-  loadPhotos();   // refresh grid
+  loadPhotos();
 }
 
 // ── Photo grid ────────────────────────────────────────────────────────────────
@@ -439,14 +602,15 @@ async function deletePhoto(id, el) {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function formatSize(bytes) {
   if (!bytes) return '—';
-  if (bytes < 1024)       return bytes + ' B';
-  if (bytes < 1048576)    return Math.round(bytes / 1024) + ' KB';
+  if (bytes < 1024)    return bytes + ' B';
+  if (bytes < 1048576) return Math.round(bytes / 1024) + ' KB';
   return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
 function timeAgo(dtStr) {
   if (!dtStr) return '—';
   const diff = Math.floor((Date.now() - new Date(dtStr)) / 1000);
+  if (diff < 5)    return 'just now';
   if (diff < 60)   return diff + 's ago';
   if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
   if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
@@ -454,7 +618,7 @@ function timeAgo(dtStr) {
 }
 
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 let toastTimer;

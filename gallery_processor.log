@@ -1,0 +1,10 @@
+2026-05-16 14:15:58  INFO      ============================================================
+2026-05-16 14:15:58  INFO        Live Gallery — Laptop Processing Node
+2026-05-16 14:15:58  INFO        Watching : C:\Watch_folder
+2026-05-16 14:15:58  INFO        Target   : https://supriyadigitals.store/gallery/api.php
+2026-05-16 14:15:58  INFO        Quality  : WebP 85%  @  max 1920px
+2026-05-16 14:15:58  INFO      ============================================================
+2026-05-16 14:15:58  INFO      🟢 Watcher running — press Ctrl+C to stop
+
+2026-05-16 14:16:11  INFO      🛑 Stopping…
+2026-05-16 14:16:11  INFO      👋 Processor stopped cleanly.
