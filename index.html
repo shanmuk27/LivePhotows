@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Live Gallery</title>
+<base href="https://shanmuk27.github.io/"/>
+<link rel="canonical" href="https://shanmuk27.github.io/"/>
+<title>Live Gallery — Supriya Digitals</title>
+<meta name="description" content="Live photo gallery by Supriya Digitals. Photos appear here in real time as they're taken."/>
+<meta property="og:title" content="Live Gallery — Supriya Digitals"/>
+<meta property="og:description" content="Photos appear here in real time as they're taken."/>
+<meta property="og:url" content="https://shanmuk27.github.io/"/>
+<meta property="og:type" content="website"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -45,7 +52,17 @@
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
   #count { font-size: .8rem; color: var(--dim); }
 
-  /* ── Event banner (shown when ?event= is set) ── */
+  /* ── Share button ── */
+  #btn-share {
+    display: none;
+    background: none; border: 1px solid var(--border);
+    color: var(--dim); padding: 4px 12px;
+    border-radius: 4px; font-size: .75rem; cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  #btn-share:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Event banner ── */
   #event-banner {
     display: none;
     background: linear-gradient(135deg, #1a1025, #0f1a2e);
@@ -131,9 +148,9 @@
 <body>
 
 <header>
-  <!-- Brand: shows studio name, or becomes smaller when event is active -->
   <div class="brand" id="header-brand">Supriya <span>Digitals</span></div>
   <div class="header-right">
+    <button id="btn-share">⬆ Share link</button>
     <span><span class="live-dot"></span>Live</span>
     <span id="count">Loading…</span>
   </div>
@@ -165,7 +182,9 @@
 </div>
 
 <script>
+const BASE_URL = 'https://shanmuk27.github.io/';
 const API      = 'https://supriyadigitals.store/gallery/api.php';
+
 const grid     = document.getElementById('grid');
 const empty    = document.getElementById('empty');
 const countEl  = document.getElementById('count');
@@ -173,6 +192,7 @@ const loadMore = document.getElementById('load-more');
 const lightbox = document.getElementById('lightbox');
 const lbImg    = document.getElementById('lb-img');
 const lbInfo   = document.getElementById('lb-info');
+const btnShare = document.getElementById('btn-share');
 
 let images  = [];
 let page    = 1;
@@ -182,27 +202,49 @@ let lbIndex = 0;
 let lastId  = 0;
 
 // ── Read event slug from URL ──────────────────────────────────────────────────
-const urlParams  = new URLSearchParams(window.location.search);
-const eventSlug  = urlParams.get('event') || '';
+const urlParams = new URLSearchParams(window.location.search);
+const eventSlug = urlParams.get('event') || '';
 
-// ── Set up event banner if slug present ───────────────────────────────────────
+// ── Event banner setup ────────────────────────────────────────────────────────
 if (eventSlug) {
-  // Show the event banner
   document.getElementById('event-banner').style.display = 'block';
 
-  // Convert slug → readable name for instant display while we wait
+  // Instant readable name while we wait for the server
   const prettyName = eventSlug
     .split('-')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
   document.getElementById('ev-title-text').textContent = prettyName;
+  document.title = prettyName + ' — Live Gallery';
 
-  // Make header brand smaller / dimmed
+  // Shrink header brand when event banner takes over
   document.getElementById('header-brand').innerHTML =
     '<span style="font-size:.75rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase">📷 Supriya Digitals</span>';
 
-  // Update page title
-  document.title = prettyName + ' — Live Gallery';
+  // Show share button so guests can copy the event link
+  btnShare.style.display = 'inline-block';
+  btnShare.addEventListener('click', () => {
+    const link = BASE_URL + '?event=' + encodeURIComponent(eventSlug);
+    navigator.clipboard.writeText(link).then(() => {
+      btnShare.textContent = '✓ Copied!';
+      setTimeout(() => { btnShare.textContent = '⬆ Share link'; }, 2000);
+    });
+  });
+
+  // Fetch the full event name from API and update banner + og:title
+  fetch(API + '?action=get_event&slug=' + encodeURIComponent(eventSlug))
+    .then(r => r.json())
+    .then(d => {
+      const name = (d.event || {}).event_name;
+      if (name) {
+        document.getElementById('ev-title-text').textContent = name;
+        document.title = name + ' — Live Gallery';
+        document.querySelector('meta[property="og:title"]').content = name + ' — Live Gallery';
+        document.querySelector('meta[property="og:url"]').content =
+          BASE_URL + '?event=' + encodeURIComponent(eventSlug);
+      }
+    })
+    .catch(() => {});
 }
 
 // ── Initial load ──────────────────────────────────────────────────────────────
@@ -255,7 +297,7 @@ function makeCard(img, isNew) {
 }
 
 function updateUI() {
-  countEl.textContent = `${total} photo${total !== 1 ? 's' : ''}`;
+  countEl.textContent    = `${total} photo${total !== 1 ? 's' : ''}`;
   empty.style.display    = total === 0 ? 'flex' : 'none';
   loadMore.style.display = hasMore ? 'block' : 'none';
 }
