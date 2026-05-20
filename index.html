@@ -231,17 +231,19 @@ if (eventSlug) {
     });
   });
 
-  // Fetch the full event name from API and update banner + og:title
-  fetch(API + '?action=get_event&slug=' + encodeURIComponent(eventSlug))
+  // Fetch real event name + studio name from server and update banner
+  fetch(`${API}?action=get_event&slug=${encodeURIComponent(eventSlug)}`)
     .then(r => r.json())
     .then(d => {
-      const name = (d.event || {}).event_name;
-      if (name) {
-        document.getElementById('ev-title-text').textContent = name;
-        document.title = name + ' — Live Gallery';
-        document.querySelector('meta[property="og:title"]').content = name + ' — Live Gallery';
+      if (d.event_name) {
+        document.getElementById('ev-title-text').textContent = d.event_name;
+        document.title = d.event_name + ' — Live Gallery';
+        document.querySelector('meta[property="og:title"]').content = d.event_name + ' — Live Gallery';
         document.querySelector('meta[property="og:url"]').content =
           BASE_URL + '?event=' + encodeURIComponent(eventSlug);
+      }
+      if (d.studio_name) {
+        document.getElementById('ev-studio-text').textContent = '📷 ' + d.studio_name;
       }
     })
     .catch(() => {});
