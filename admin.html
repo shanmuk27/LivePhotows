@@ -8,7 +8,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #f5f5f5;
+    --bg:        #f0f2f5;
     --surface:   #ffffff;
     --border:    #e0e0e0;
     --text:      #1a1a1a;
@@ -17,7 +17,7 @@
     --danger:    #dc2626;
     --success:   #16a34a;
     --warn:      #d97706;
-    --radius:    8px;
+    --radius:    10px;
     --connected: #16a34a;
     --idle:      #d97706;
     --disconn:   #9ca3af;
@@ -39,7 +39,7 @@
   .login-box {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 36px 40px; width: 340px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
   }
   .login-box h1 { font-size: 1.3rem; margin-bottom: 6px; }
   .login-box p  { color: var(--dim); margin-bottom: 24px; font-size: .85rem; }
@@ -68,6 +68,8 @@
     background: var(--surface); border-bottom: 1px solid var(--border);
     padding: 12px 24px;
     display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
   }
   header h1 { font-size: 1rem; font-weight: 600; }
   header .right { display: flex; align-items: center; gap: 12px; color: var(--dim); font-size: .82rem; }
@@ -106,55 +108,38 @@
   }
   .camera-header .pulse-dot {
     width: 8px; height: 8px; border-radius: 50%;
-    background: var(--connected);
-    animation: pulse 2s infinite;
+    background: var(--connected); animation: pulse 2s infinite;
   }
   @keyframes pulse {
     0%,100% { opacity: 1; transform: scale(1); }
     50%      { opacity: .5; transform: scale(1.3); }
   }
   .camera-header .pulse-dot.no-cameras { background: var(--disconn); animation: none; }
-
-  #camera-list {
-    display: flex; flex-wrap: wrap; gap: 12px;
-    padding: 12px 0 14px;
-  }
+  #camera-list { display: flex; flex-wrap: wrap; gap: 12px; padding: 12px 0 14px; }
   #camera-list:empty::after {
     content: 'No cameras detected — start camera_monitor.py on your laptop';
     color: var(--dim); font-size: .82rem; font-style: italic;
   }
-
   .camera-card {
     display: flex; align-items: center; gap: 12px;
     background: var(--bg); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 10px 16px;
     min-width: 260px; flex: 1; max-width: 400px;
-    transition: border-color .3s;
   }
   .camera-card.connected { border-color: #86efac; background: #f0fdf4; }
   .camera-card.idle      { border-color: #fcd34d; background: #fffbeb; }
   .camera-card.disconnected { opacity: .6; }
-
-  .cam-icon {
-    font-size: 1.6rem; flex-shrink: 0;
-    filter: grayscale(0);
-  }
+  .cam-icon { font-size: 1.6rem; flex-shrink: 0; }
   .camera-card.disconnected .cam-icon { filter: grayscale(1); }
-
   .cam-info { flex: 1; min-width: 0; }
-  .cam-name {
-    font-weight: 600; font-size: .88rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .cam-sub { font-size: .72rem; color: var(--dim); margin-top: 1px; }
-
+  .cam-name { font-weight: 600; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cam-sub  { font-size: .72rem; color: var(--dim); margin-top: 1px; }
   .cam-right { text-align: right; flex-shrink: 0; }
   .cam-count { font-size: 1.3rem; font-weight: 700; line-height: 1; }
   .cam-count.connected { color: var(--connected); }
   .cam-count.idle      { color: var(--idle); }
   .cam-count.disconnected { color: var(--disconn); }
   .cam-count-lbl { font-size: .65rem; color: var(--dim); }
-
   .cam-status-badge {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: .68rem; font-weight: 600; text-transform: uppercase;
@@ -166,7 +151,7 @@
   }
   .cam-status-badge.connected { color: var(--connected); }
   .cam-status-badge.connected::before { background: var(--connected); }
-  .cam-status-badge.idle      { color: var(--idle); }
+  .cam-status-badge.idle { color: var(--idle); }
   .cam-status-badge.idle::before { background: var(--idle); }
   .cam-status-badge.disconnected { color: var(--disconn); }
   .cam-status-badge.disconnected::before { background: var(--disconn); }
@@ -174,8 +159,229 @@
   /* ── Main layout ── */
   main { padding: 24px; max-width: 1200px; margin: 0 auto; }
   .section { margin-bottom: 32px; }
-  .section h2 { font-size: .9rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .06em; color: var(--dim); margin-bottom: 14px; }
+  .section-title {
+    font-size: .78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--dim); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── Event Creator Card ── */
+  .event-creator {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .event-form-row {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .event-form-row .field-group { flex: 1; min-width: 200px; }
+  .event-form-row label {
+    display: block; font-size: .78rem; font-weight: 600;
+    color: var(--dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .event-form-row input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: .9rem; background: var(--bg);
+    outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  .event-form-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  }
+  .btn-create-event {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff; border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: .88rem; font-weight: 600;
+    cursor: pointer; transition: opacity .2s; white-space: nowrap;
+    align-self: flex-end;
+  }
+  .btn-create-event:hover { opacity: .9; }
+
+  /* ── Event Result ── */
+  #event-result { display: none; }
+  .event-result-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: #f0fdf4; border: 1px solid #86efac;
+    border-radius: 8px; padding: 12px 16px; flex-wrap: wrap;
+  }
+  .event-result-bar .event-url-text {
+    flex: 1; font-size: .82rem; font-weight: 500; color: var(--success);
+    word-break: break-all; min-width: 180px;
+  }
+  .btn-copy-url {
+    background: #fff; border: 1px solid #86efac; color: var(--success);
+    border-radius: 6px; padding: 7px 14px; font-size: .8rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: background .2s;
+  }
+  .btn-copy-url:hover { background: #dcfce7; }
+  .btn-show-qr {
+    background: #2563eb; color: #fff; border: none;
+    border-radius: 6px; padding: 7px 14px; font-size: .8rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  .btn-show-qr:hover { background: #1d4ed8; }
+
+  /* ── QR Poster Modal ── */
+  #qr-modal {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  #qr-modal.open { display: flex; }
+  .qr-modal-inner {
+    position: relative; max-width: 420px; width: 100%;
+    animation: popIn .25s cubic-bezier(.175,.885,.32,1.275);
+  }
+  @keyframes popIn { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  /* The printable poster */
+  .qr-poster {
+    background: linear-gradient(160deg, #0f0c29, #302b63, #24243e);
+    border-radius: 20px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    position: relative; overflow: hidden;
+  }
+  .qr-poster::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(212,169,74,.15);
+  }
+  .qr-poster::after {
+    content: '';
+    position: absolute; bottom: -40px; left: -40px;
+    width: 130px; height: 130px; border-radius: 50%;
+    background: rgba(37,99,235,.2);
+  }
+  .qr-stars { font-size: .9rem; letter-spacing: 4px; color: #d4a94a; margin-bottom: 10px; }
+  .qr-event-title {
+    font-size: 1.35rem; font-weight: 800; color: #fff;
+    line-height: 1.3; margin-bottom: 6px;
+    text-shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
+  .qr-subtitle {
+    font-size: .75rem; color: rgba(255,255,255,.45);
+    letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .qr-frame {
+    background: #fff;
+    border-radius: 16px;
+    padding: 12px;
+    display: inline-block;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    position: relative; z-index: 1;
+  }
+  .qr-frame img { width: 220px; height: 220px; display: block; border-radius: 8px; }
+  .qr-tap-hint {
+    font-size: .7rem; color: rgba(255,255,255,.45);
+    margin: 14px 0 8px; letter-spacing: .05em;
+  }
+  .qr-divider {
+    border: none; border-top: 1px solid rgba(255,255,255,.12);
+    margin: 14px 0;
+  }
+  .qr-studio-row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .qr-camera-icon { font-size: 1.1rem; }
+  .qr-studio-name {
+    font-size: .88rem; font-weight: 700; color: #d4a94a;
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+
+  .qr-modal-close {
+    position: absolute; top: -14px; right: -14px;
+    background: rgba(255,255,255,.15); backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,.2); color: #fff;
+    width: 32px; height: 32px; border-radius: 50%;
+    font-size: .95rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-modal-close:hover { background: rgba(220,38,38,.6); }
+
+  .qr-actions {
+    display: flex; gap: 10px; justify-content: center; margin-top: 14px;
+  }
+  .qr-actions button {
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; border-radius: 8px; padding: 8px 18px;
+    font-size: .8rem; cursor: pointer; font-weight: 500;
+  }
+  .qr-actions button:hover { background: rgba(255,255,255,.2); }
+
+  /* ── Active Event Banner ── */
+  .active-event-bar {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, #052e16, #14532d);
+    border: 1px solid #16a34a;
+    border-radius: var(--radius); padding: 14px 18px;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .active-event-bar .ae-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #4ade80; flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+  .active-event-bar .ae-label {
+    font-size: .68rem; color: #4ade80;
+    text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+  }
+  .active-event-bar .ae-name {
+    font-size: 1rem; font-weight: 700; color: #fff; flex: 1;
+  }
+  .active-event-bar .ae-slug {
+    font-size: .72rem; color: rgba(255,255,255,.45);
+    font-family: monospace;
+  }
+  .btn-deactivate {
+    background: rgba(220,38,38,.2); border: 1px solid rgba(220,38,38,.4);
+    color: #fca5a5; border-radius: 6px;
+    padding: 5px 12px; font-size: .75rem; cursor: pointer; font-weight: 600;
+  }
+  .btn-deactivate:hover { background: rgba(220,38,38,.4); }
+
+  .no-active-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px dashed var(--border);
+    border-radius: var(--radius); padding: 12px 16px;
+    margin-bottom: 14px; color: var(--dim); font-size: .85rem;
+  }
+
+  /* ── Events List ── */
+  .events-list { display: flex; flex-direction: column; gap: 10px; }
+  .event-row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 16px; flex-wrap: wrap;
+  }
+  .event-row .ev-icon { font-size: 1.4rem; }
+  .event-row .ev-info { flex: 1; min-width: 160px; }
+  .event-row .ev-name { font-weight: 600; font-size: .9rem; }
+  .event-row .ev-meta { font-size: .72rem; color: var(--dim); margin-top: 2px; }
+  .event-row .ev-badge {
+    background: #eff6ff; color: var(--accent);
+    border-radius: 20px; padding: 3px 10px; font-size: .72rem; font-weight: 600;
+  }
+  .ev-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: .75rem; cursor: pointer; color: var(--dim); }
+  .ev-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .ev-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+  .ev-btn.set-active {
+    background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; font-weight: 600;
+  }
+  .ev-btn.set-active:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+  .ev-btn.is-active {
+    background: #14532d; border-color: #16a34a; color: #4ade80; font-weight: 700;
+    cursor: default;
+  }
+  .no-events { color: var(--dim); font-size: .85rem; font-style: italic; padding: 10px 0; }
 
   /* ── Upload zone ── */
   #drop-zone {
@@ -189,8 +395,6 @@
   #drop-zone p { color: var(--dim); font-size: .9rem; }
   #drop-zone span { font-size: .78rem; color: #aaa; }
   #file-input { display: none; }
-
-  /* ── Upload queue ── */
   #queue { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
   .queue-item {
     display: flex; align-items: center; gap: 10px;
@@ -202,7 +406,6 @@
   .status.uploading { color: var(--accent); }
   .status.done      { color: var(--success); }
   .status.fail      { color: var(--danger); }
-
   #upload-btn {
     margin-top: 14px; padding: 9px 24px;
     background: var(--accent); color: #fff;
@@ -220,13 +423,9 @@
   }
   .thumb {
     position: relative; overflow: hidden;
-    border-radius: 6px; background: var(--border);
-    aspect-ratio: 1;
+    border-radius: 6px; background: var(--border); aspect-ratio: 1;
   }
-  .thumb img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block; transition: transform .3s;
-  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
   .thumb:hover img { transform: scale(1.06); }
   .thumb .del-btn {
     position: absolute; top: 5px; right: 5px;
@@ -246,7 +445,6 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .thumb:hover .thumb-info { opacity: 1; }
-
   #grid-loading { color: var(--dim); font-size: .85rem; }
 
   /* ── Toast ── */
@@ -265,8 +463,8 @@
 <!-- Login Screen -->
 <div id="login-screen">
   <div class="login-box">
-    <h1>Gallery Admin</h1>
-    <p>Enter your password to manage photos</p>
+    <h1>&#128247; Gallery Admin</h1>
+    <p>Enter your password to manage events &amp; photos</p>
     <div class="field">
       <label>Password</label>
       <input type="password" id="pass-input" placeholder="Enter admin password" autocomplete="current-password"/>
@@ -292,6 +490,7 @@
     <div class="stat"><div class="val" id="stat-size">—</div><div class="lbl">Storage used</div></div>
     <div class="stat"><div class="val" id="stat-time">—</div><div class="lbl">Last upload</div></div>
     <div class="stat"><div class="val" id="stat-cam-count" style="color:var(--connected)">—</div><div class="lbl">Cameras online</div></div>
+    <div class="stat"><div class="val" id="stat-events" style="color:#7c3aed">—</div><div class="lbl">Active events</div></div>
   </div>
 
   <!-- Camera Status Section -->
@@ -306,9 +505,55 @@
 
   <main>
 
-    <!-- Upload -->
+    <!-- ═══ EVENT MANAGER ═══ -->
     <div class="section">
-      <h2>Upload Photos</h2>
+      <div class="section-title">📅 Event Manager</div>
+
+      <!-- Create form -->
+      <div class="event-creator">
+        <div class="event-form-row">
+          <div class="field-group">
+            <label>Event Name</label>
+            <input type="text" id="eventName" placeholder="e.g. Madhusudhana Rao Weds Pavani"/>
+          </div>
+          <div class="field-group" style="max-width:220px">
+            <label>Studio Name</label>
+            <input type="text" id="studioName" value="Supriya Digitals"/>
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn-create-event" onclick="createEvent()">✨ Create Event</button>
+          </div>
+        </div>
+
+        <!-- Result bar (hidden until event created) -->
+        <div id="event-result">
+          <div class="event-result-bar">
+            <span style="font-size:1rem">🔗</span>
+            <span class="event-url-text" id="generatedUrlText"></span>
+            <button class="btn-copy-url" onclick="copyUrl()">📋 Copy URL</button>
+            <button class="btn-show-qr" onclick="showQrModal()">📱 QR Poster</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events list -->
+    <div class="section">
+      <div class="section-title">📋 All Events</div>
+
+      <!-- Active event status bar -->
+      <div id="active-event-bar" class="no-active-bar">
+        <span>⏸️</span> <span>No event is currently active — laptop processor is paused.</span>
+      </div>
+
+      <div id="events-list" class="events-list">
+        <div class="no-events">Loading events…</div>
+      </div>
+    </div>
+
+    <!-- ═══ UPLOAD ═══ -->
+    <div class="section">
+      <div class="section-title">📤 Upload Photos</div>
       <div id="drop-zone" onclick="document.getElementById('file-input').click()">
         <svg width="40" height="40" fill="none" stroke="#888" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <p>Click or drag &amp; drop photos here</p>
@@ -319,14 +564,40 @@
       <button id="upload-btn" onclick="uploadAll()">Upload selected photos</button>
     </div>
 
-    <!-- Photo Grid -->
+    <!-- ═══ PHOTO GRID ═══ -->
     <div class="section">
-      <h2>All Photos</h2>
+      <div class="section-title">🖼️ All Photos</div>
       <div id="grid-loading">Loading…</div>
       <div id="photo-grid"></div>
     </div>
 
   </main>
+</div>
+
+<!-- QR Code Poster Modal -->
+<div id="qr-modal">
+  <div class="qr-modal-inner">
+    <button class="qr-modal-close" onclick="closeQrModal()">✕</button>
+    <div class="qr-poster" id="qrPoster">
+      <div class="qr-stars">✦ ✦ ✦ ✦ ✦</div>
+      <div class="qr-event-title" id="posterEventName"></div>
+      <div class="qr-subtitle">Scan to view your live photos</div>
+      <div class="qr-frame">
+        <img id="qrImage" src="" alt="QR Code"/>
+      </div>
+      <div class="qr-tap-hint">📱 Open camera &amp; point at QR code</div>
+      <hr class="qr-divider"/>
+      <div class="qr-studio-row">
+        <span class="qr-camera-icon">📷</span>
+        <span class="qr-studio-name" id="posterStudioName"></span>
+      </div>
+    </div>
+    <div class="qr-actions">
+      <button onclick="printQr()">🖨️ Print</button>
+      <button onclick="downloadQr()">⬇️ Download QR</button>
+      <button onclick="closeQrModal()">✕ Close</button>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -337,18 +608,18 @@ const API = 'https://supriyadigitals.store/gallery/api.php';
 let password     = '';
 let pendingFiles = [];
 let camPollTimer = null;
+let currentEventUrl  = '';
+let currentEventSlug = '';
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function login() {
   const pass = document.getElementById('pass-input').value.trim();
   if (!pass) return;
-
   const res = await fetch(`${API}?action=stats&pass=${encodeURIComponent(pass)}`);
   if (!res.ok) {
     document.getElementById('login-error').style.display = 'block';
     return;
   }
-
   password = pass;
   localStorage.setItem('gallery_pass', pass);
   showApp();
@@ -369,9 +640,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     const res = await fetch(`${API}?action=stats&pass=${encodeURIComponent(saved)}`);
     if (res.ok) { password = saved; showApp(); }
   }
-
   document.getElementById('pass-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') login();
+  });
+  document.getElementById('eventName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') createEvent();
   });
 
   // File picker events
@@ -392,8 +665,8 @@ function showApp() {
   document.getElementById('app').style.display = 'block';
   loadStats();
   loadPhotos();
+  loadEvents();
   loadCameraStatus();
-  // Poll camera status every 15 seconds
   camPollTimer = setInterval(loadCameraStatus, 15000);
 }
 
@@ -401,13 +674,217 @@ function showApp() {
 async function loadStats() {
   const res  = await fetch(`${API}?action=stats&pass=${encodeURIComponent(password)}`);
   const data = await res.json();
-
   document.getElementById('stat-total').textContent = data.total ?? '—';
   document.getElementById('stat-size').textContent  = formatSize(data.total_size);
-
   const last = data.recent?.[0];
-  document.getElementById('stat-time').textContent  =
-    last ? timeAgo(last.uploaded_at) : 'Never';
+  document.getElementById('stat-time').textContent  = last ? timeAgo(last.uploaded_at) : 'Never';
+}
+
+// ── Events ────────────────────────────────────────────────────────────────────
+let activeSlug = '';   // tracks which event is currently live
+
+async function loadEvents() {
+  // Load both events list and current active event in parallel
+  const [evRes, activeRes] = await Promise.all([
+    fetch(`${API}?action=get_events&pass=${encodeURIComponent(password)}`),
+    fetch(`${API}?action=get_active_event`),
+  ]);
+  const evData     = await evRes.json();
+  const activeData = await activeRes.json();
+
+  activeSlug = activeData.active_slug ?? '';
+  document.getElementById('stat-events').textContent = evData.events?.length ?? 0;
+
+  // Update active event banner
+  updateActiveBar(activeData);
+
+  const list = document.getElementById('events-list');
+  if (!evData.events || evData.events.length === 0) {
+    list.innerHTML = '<div class="no-events">No events yet — create one above.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  evData.events.forEach(ev => {
+    const isActive = ev.slug === activeSlug;
+    const row = document.createElement('div');
+    row.className = 'event-row';
+    row.id = `ev-row-${ev.slug}`;
+    if (isActive) row.style.borderColor = '#16a34a';
+
+    row.innerHTML = `
+      <span class="ev-icon">${isActive ? '🟢' : '📸'}</span>
+      <div class="ev-info">
+        <div class="ev-name">${escHtml(ev.event_name)}${isActive ? ' <span style="font-size:.7rem;color:#4ade80;font-weight:600">● LIVE</span>' : ''}</div>
+        <div class="ev-meta">📷 ${escHtml(ev.studio_name)} &nbsp;·&nbsp; 🗓️ ${new Date(ev.created_at).toLocaleDateString('en-IN')} &nbsp;·&nbsp; <code style="font-size:.7rem">${escHtml(ev.slug)}</code></div>
+      </div>
+      <span class="ev-badge">${ev.photo_count} photos</span>
+      ${isActive
+        ? `<button class="ev-btn is-active">✅ Active</button>`
+        : `<button class="ev-btn set-active" onclick="setActiveEvent('${escHtml(ev.slug)}')">▶ Set Active</button>`
+      }
+      <button class="ev-btn" onclick="viewEventGallery('${escHtml(ev.slug)}')">🔗 Open</button>
+      <button class="ev-btn" onclick="loadQrForEvent('${escHtml(ev.event_name)}', '${escHtml(ev.studio_name)}', '${escHtml(ev.event_url)}')">📱 QR</button>
+      <button class="ev-btn danger" onclick="deleteEvent(${ev.id}, this)">🗑️</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function updateActiveBar(activeData) {
+  const bar = document.getElementById('active-event-bar');
+  const slug = activeData.active_slug ?? '';
+
+  if (!slug) {
+    bar.className = 'no-active-bar';
+    bar.innerHTML = '<span>⏸️</span> <span>No event is currently active — laptop processor is paused.</span>';
+    return;
+  }
+
+  const evName = activeData.event?.event_name ?? slug;
+  const studio = activeData.event?.studio_name ?? '';
+  bar.className = 'active-event-bar';
+  bar.innerHTML = `
+    <span class="ae-dot"></span>
+    <div>
+      <div class="ae-label">🔴 Currently Live</div>
+      <div class="ae-name">${escHtml(evName)}</div>
+      ${studio ? `<div class="ae-slug">📷 ${escHtml(studio)}</div>` : ''}
+    </div>
+    <div class="ae-slug" style="margin-left:auto">${escHtml(slug)}</div>
+    <button class="btn-deactivate" onclick="deactivateEvent()">⏹ Stop</button>
+  `;
+}
+
+async function setActiveEvent(slug) {
+  const fd = new FormData();
+  fd.append('action', 'set_active_event');
+  fd.append('pass',   password);
+  fd.append('slug',   slug);
+  const res  = await fetch(API, { method: 'POST', body: fd });
+  const data = await res.json();
+  if (data.ok) {
+    toast(`✅ "${data.event_name}" is now active — laptop will sync within 30s`);
+    activeSlug = slug;
+    loadEvents();
+  } else {
+    toast('Error: ' + (data.error ?? 'Unknown'));
+  }
+}
+
+async function deactivateEvent() {
+  if (!confirm('Stop the active event? The laptop processor will pause uploading.')) return;
+  const fd = new FormData();
+  fd.append('action', 'set_active_event');
+  fd.append('pass',   password);
+  fd.append('slug',   '');
+  await fetch(API, { method: 'POST', body: fd });
+  activeSlug = '';
+  toast('⏸️ Event deactivated — laptop processor paused');
+  loadEvents();
+}
+
+async function createEvent() {
+  const eventName  = document.getElementById('eventName').value.trim();
+  const studioName = document.getElementById('studioName').value.trim() || 'Supriya Digitals';
+  if (!eventName) { toast('Please enter an event name!'); return; }
+
+  const fd = new FormData();
+  fd.append('action',      'create_event');
+  fd.append('pass',        password);
+  fd.append('event_name',  eventName);
+  fd.append('studio_name', studioName);
+
+  const res  = await fetch(API, { method: 'POST', body: fd });
+  const data = await res.json();
+
+  if (!data.ok) {
+    toast('Error: ' + (data.error ?? 'Unknown error'));
+    return;
+  }
+
+  currentEventUrl  = data.event_url;
+  currentEventSlug = data.slug;
+
+  document.getElementById('generatedUrlText').textContent = data.event_url;
+  document.getElementById('posterEventName').textContent  = eventName;
+  document.getElementById('posterStudioName').textContent = studioName;
+  document.getElementById('event-result').style.display   = 'block';
+
+  toast('✅ Event created!');
+  loadEvents();
+}
+
+async function deleteEvent(id, btn) {
+  if (!confirm('Delete this event? Photos will stay but won\'t be linked to this event.')) return;
+  const fd = new FormData();
+  fd.append('action', 'delete_event');
+  fd.append('pass',   password);
+  fd.append('id',     id);
+  await fetch(API, { method: 'POST', body: fd });
+  toast('Event deleted');
+  loadEvents();
+}
+
+function viewEventGallery(slug) {
+  window.open(`index.html?event=${slug}`, '_blank');
+}
+
+function copyUrl() {
+  navigator.clipboard.writeText(currentEventUrl).then(() => {
+    toast('✅ URL copied!');
+  });
+}
+
+// ── QR Poster ─────────────────────────────────────────────────────────────────
+function showQrModal() {
+  if (!currentEventUrl) return;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=${encodeURIComponent(currentEventUrl)}`;
+  document.getElementById('qrImage').src = qrUrl;
+  document.getElementById('qr-modal').classList.add('open');
+}
+
+function loadQrForEvent(eventName, studioName, eventUrl) {
+  currentEventUrl = eventUrl;
+  document.getElementById('posterEventName').textContent  = eventName;
+  document.getElementById('posterStudioName').textContent = studioName;
+  showQrModal();
+}
+
+function closeQrModal() {
+  document.getElementById('qr-modal').classList.remove('open');
+}
+
+function printQr() {
+  const poster = document.getElementById('qrPoster').outerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>QR Poster</title>
+    <style>
+      body { background:#1a1a2e; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; font-family:system-ui,sans-serif; }
+      .qr-poster { background:linear-gradient(160deg,#0f0c29,#302b63,#24243e); border-radius:20px; padding:36px 28px 28px; text-align:center; max-width:380px; }
+      .qr-poster::before,.qr-poster::after{display:none}
+      .qr-stars{font-size:.9rem;letter-spacing:4px;color:#d4a94a;margin-bottom:10px}
+      .qr-event-title{font-size:1.35rem;font-weight:800;color:#fff;line-height:1.3;margin-bottom:6px}
+      .qr-subtitle{font-size:.75rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+      .qr-frame{background:#fff;border-radius:16px;padding:12px;display:inline-block}
+      .qr-frame img{width:220px;height:220px;display:block;border-radius:8px}
+      .qr-tap-hint{font-size:.7rem;color:rgba(255,255,255,.45);margin:14px 0 8px}
+      .qr-divider{border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0}
+      .qr-studio-row{display:flex;align-items:center;justify-content:center;gap:8px}
+      .qr-camera-icon{font-size:1.1rem}
+      .qr-studio-name{font-size:.88rem;font-weight:700;color:#d4a94a;letter-spacing:.12em;text-transform:uppercase}
+    </style></head><body>${poster}<script>window.print();window.close();<\/script></body></html>
+  `);
+}
+
+function downloadQr() {
+  const qrSrc = document.getElementById('qrImage').src;
+  const a = document.createElement('a');
+  a.href = qrSrc;
+  a.download = 'qr-code.png';
+  a.target = '_blank';
+  a.click();
 }
 
 // ── Camera Status ─────────────────────────────────────────────────────────────
@@ -417,53 +894,28 @@ async function loadCameraStatus() {
     const res = await fetch(`${API}?action=camera_status`);
     if (!res.ok) return;
     data = await res.json();
-  } catch {
-    return; // silently ignore network errors for camera status
-  }
+  } catch { return; }
 
   const cameras   = data.cameras ?? [];
   const connected = data.connected_count ?? 0;
   const list      = document.getElementById('camera-list');
   const pulse     = document.getElementById('cam-pulse');
   const countEl   = document.getElementById('stat-cam-count');
-  const lastUpd   = document.getElementById('cam-last-update');
 
-  // Update connected count stat
   countEl.textContent = connected;
   countEl.style.color = connected > 0 ? 'var(--connected)' : 'var(--disconn)';
+  if (connected > 0) pulse.classList.remove('no-cameras');
+  else pulse.classList.add('no-cameras');
 
-  // Pulse dot
-  if (connected > 0) {
-    pulse.classList.remove('no-cameras');
-  } else {
-    pulse.classList.add('no-cameras');
-  }
+  document.getElementById('cam-last-update').textContent =
+    cameras.length > 0 ? `Updated ${timeAgo(data.server_time)}` : '';
 
-  // Last update time
-  lastUpd.textContent = cameras.length > 0
-    ? `Updated ${timeAgo(data.server_time)}`
-    : '';
-
-  // Render camera cards
   list.innerHTML = '';
   cameras.forEach(cam => {
     const card = document.createElement('div');
     card.className = `camera-card ${cam.status}`;
-
-    const lastPhoto = cam.last_photo_at
-      ? `Last photo ${timeAgo(cam.last_photo_at)}`
-      : 'No photos yet this session';
-
-    const statusLabel = {
-      connected:    'Connected',
-      idle:         'Idle',
-      disconnected: 'Disconnected',
-    }[cam.status] ?? cam.status;
-
-    const countColor = cam.status === 'connected' ? 'connected'
-                     : cam.status === 'idle'      ? 'idle'
-                     :                              'disconnected';
-
+    const lastPhoto = cam.last_photo_at ? `Last photo ${timeAgo(cam.last_photo_at)}` : 'No photos yet';
+    const statusLabel = { connected:'Connected', idle:'Idle', disconnected:'Disconnected' }[cam.status] ?? cam.status;
     card.innerHTML = `
       <div class="cam-icon">📷</div>
       <div class="cam-info">
@@ -472,7 +924,7 @@ async function loadCameraStatus() {
         <div class="cam-status-badge ${cam.status}">${statusLabel}</div>
       </div>
       <div class="cam-right">
-        <div class="cam-count ${countColor}">${cam.photos_session}</div>
+        <div class="cam-count ${cam.status}">${cam.photos_session}</div>
         <div class="cam-count-lbl">this session</div>
         <div class="cam-count-lbl" style="margin-top:2px;color:var(--dim)">${cam.photos_total} total</div>
       </div>
@@ -487,7 +939,6 @@ function addFiles(fileList) {
   renderQueue();
   document.getElementById('upload-btn').style.display = 'block';
 }
-
 function renderQueue() {
   const queue = document.getElementById('queue');
   queue.innerHTML = '';
@@ -495,10 +946,7 @@ function renderQueue() {
     const div = document.createElement('div');
     div.className = 'queue-item';
     div.id = `qi-${i}`;
-    div.innerHTML = `
-      <span class="name">${escHtml(f.name)}</span>
-      <span class="status" id="qs-${i}">${formatSize(f.size)}</span>
-    `;
+    div.innerHTML = `<span class="name">${escHtml(f.name)}</span><span class="status" id="qs-${i}">${formatSize(f.size)}</span>`;
     queue.appendChild(div);
   });
 }
@@ -517,6 +965,8 @@ async function uploadAll() {
     fd.append('action', 'upload');
     fd.append('pass',   password);
     fd.append('photo',  pendingFiles[i]);
+    // Attach current event slug if one is active
+    if (currentEventSlug) fd.append('event_slug', currentEventSlug);
 
     try {
       const res  = await fetch(API, { method: 'POST', body: fd });
@@ -538,10 +988,10 @@ async function uploadAll() {
   btn.disabled = false;
   btn.style.display = 'none';
   document.getElementById('file-input').value = '';
-
   toast('Upload complete');
   loadStats();
   loadPhotos();
+  loadEvents();
 }
 
 // ── Photo grid ────────────────────────────────────────────────────────────────
@@ -549,20 +999,15 @@ async function loadPhotos() {
   const container = document.getElementById('photo-grid');
   document.getElementById('grid-loading').textContent = 'Loading…';
   container.innerHTML = '';
-
   let page = 1, loaded = 0, total = Infinity;
   while (loaded < total) {
     const res  = await fetch(`${API}?action=images&page=${page}&limit=40`);
     const data = await res.json();
     total = data.total;
-    data.images.forEach(img => {
-      container.appendChild(makeThumb(img));
-      loaded++;
-    });
+    data.images.forEach(img => { container.appendChild(makeThumb(img)); loaded++; });
     page++;
     if (data.images.length === 0) break;
   }
-
   document.getElementById('grid-loading').textContent = '';
   if (total === 0) document.getElementById('grid-loading').textContent = 'No photos yet.';
 }
@@ -581,22 +1026,14 @@ function makeThumb(img) {
 
 async function deletePhoto(id, el) {
   if (!confirm('Delete this photo? This cannot be undone.')) return;
-
   const fd = new FormData();
   fd.append('action', 'delete');
   fd.append('pass',   password);
   fd.append('id',     id);
-
   const res  = await fetch(API, { method: 'POST', body: fd });
   const data = await res.json();
-
-  if (data.ok) {
-    el.remove();
-    toast('Photo deleted');
-    loadStats();
-  } else {
-    toast('Delete failed: ' + (data.error ?? 'Unknown error'));
-  }
+  if (data.ok) { el.remove(); toast('Photo deleted'); loadStats(); }
+  else toast('Delete failed: ' + (data.error ?? 'Unknown error'));
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -606,7 +1043,6 @@ function formatSize(bytes) {
   if (bytes < 1048576) return Math.round(bytes / 1024) + ' KB';
   return (bytes / 1048576).toFixed(1) + ' MB';
 }
-
 function timeAgo(dtStr) {
   if (!dtStr) return '—';
   const diff = Math.floor((Date.now() - new Date(dtStr)) / 1000);
@@ -616,11 +1052,9 @@ function timeAgo(dtStr) {
   if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
   return Math.floor(diff / 86400) + 'd ago';
 }
-
 function escHtml(s) {
   return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -629,6 +1063,10 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
+// Close modal on backdrop click
+document.getElementById('qr-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeQrModal();
+});
 </script>
 </body>
 </html>
