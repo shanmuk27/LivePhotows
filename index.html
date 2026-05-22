@@ -62,6 +62,18 @@
   }
   #btn-share:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* ── Slow WiFi banner ── */
+  #slow-banner {
+    display: none;
+    background: linear-gradient(90deg, #2a1a00, #1a1000);
+    border-bottom: 1px solid #5a3a00;
+    padding: 8px 20px;
+    font-size: .75rem;
+    color: #f0a030;
+    text-align: center;
+  }
+  #slow-banner .slow-icon { margin-right: 6px; }
+
   /* ── Event banner ── */
   #event-banner {
     display: none;
@@ -84,6 +96,54 @@
     margin-top: 6px; letter-spacing: .08em; text-transform: uppercase;
   }
 
+  /* ── Camera Tabs ── */
+  #camera-tabs {
+    display: none;
+    padding: 12px 20px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #camera-tabs::-webkit-scrollbar { display: none; }
+  #camera-tabs.visible {
+    display: flex;
+  }
+  .cam-tab {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    padding: 6px 16px 10px;
+    font-size: .78rem;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    border-bottom: none;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s, background .2s;
+    position: relative;
+    bottom: -1px;
+  }
+  .cam-tab:hover { color: var(--text); border-color: #444; }
+  .cam-tab.active {
+    background: var(--bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cam-tab .cam-count-badge {
+    display: inline-block;
+    background: #333;
+    border-radius: 20px;
+    padding: 0 6px;
+    font-size: .65rem;
+    margin-left: 5px;
+    color: var(--dim);
+    vertical-align: middle;
+  }
+  .cam-tab.active .cam-count-badge { background: rgba(212,169,74,.2); color: var(--accent); }
+
   /* ── Grid ── */
   #grid {
     columns: 4 220px;
@@ -98,10 +158,43 @@
     position: relative;
     background: var(--surface);
   }
+
+  /* Skeleton shimmer while loading */
+  .photo.skeleton {
+    min-height: 220px;
+    background: linear-gradient(90deg, #1a1a1a 25%, #252525 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    cursor: default;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
   .photo img { width: 100%; display: block; transition: transform .4s ease; }
+  .photo img[data-src] { min-height: 180px; background: var(--surface); }
   .photo:hover img { transform: scale(1.04); }
   .photo.new { animation: flash .7s ease; }
   @keyframes flash { 0%{outline: 2px solid var(--accent);outline-offset:2px} 100%{outline:0} }
+
+  /* Camera badge on photo */
+  .photo .cam-badge {
+    position: absolute; top: 6px; left: 6px;
+    background: rgba(0,0,0,.7);
+    color: var(--accent);
+    font-size: .6rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .photo:hover .cam-badge { opacity: 1; }
+
+  /* ── Sentinel (auto-load trigger) ── */
+  #sentinel { height: 1px; }
 
   /* ── Empty state ── */
   #empty {
@@ -111,6 +204,26 @@
     color: var(--dim); font-size: .9rem;
   }
 
+  /* ── Loading indicator ── */
+  #loading-bar {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    color: var(--dim);
+    font-size: .8rem;
+  }
+  #loading-bar .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   /* ── Lightbox ── */
   #lightbox {
     display: none; position: fixed; inset: 0; z-index: 200;
@@ -118,22 +231,67 @@
     align-items: center; justify-content: center; flex-direction: column;
   }
   #lightbox.open { display: flex; }
+  #lb-img-wrap {
+    position: relative;
+    max-width: 92vw; max-height: 88vh;
+    display: flex; align-items: center; justify-content: center;
+  }
   #lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; box-shadow: 0 20px 60px rgba(0,0,0,.8); }
+  #lb-spinner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.3); border-radius: 4px;
+  }
+  #lb-spinner .ring {
+    width: 36px; height: 36px;
+    border: 3px solid rgba(255,255,255,.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
   #lb-close {
     position: absolute; top: 16px; right: 20px;
     font-size: 2rem; color: rgba(255,255,255,.5);
     cursor: pointer; background: none; border: none; line-height: 1;
   }
   #lb-close:hover { color: #fff; }
+
+  /* Lightbox actions row */
+  #lb-actions {
+    position: absolute; top: 16px; left: 20px;
+    display: flex; gap: 8px;
+  }
+  #lb-download {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    color: rgba(255,255,255,.7);
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: .75rem;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  #lb-download:hover { background: rgba(212,169,74,.2); color: var(--accent); }
+  #lb-download:disabled { opacity: .4; cursor: default; }
+
   #lb-nav { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; }
   #lb-nav button {
     background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
     color: #fff; padding: 6px 18px; cursor: pointer; font-size: 1.2rem; border-radius: 4px;
   }
   #lb-nav button:hover { background: rgba(255,255,255,.2); }
-  #lb-info { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); font-size: .72rem; color: rgba(255,255,255,.35); white-space: nowrap; }
+  #lb-info { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); font-size: .72rem; color: rgba(255,255,255,.35); white-space: nowrap; text-align: center; }
 
-  /* ── Load more ── */
+  /* Touch swipe hint */
+  #lb-swipe-hint {
+    position: absolute; bottom: 100px;
+    left: 50%; transform: translateX(-50%);
+    font-size: .65rem; color: rgba(255,255,255,.2);
+    pointer-events: none;
+  }
+
+  /* ── Load more (fallback button) ── */
   #load-more {
     display: block; margin: 24px auto;
     background: var(--surface); border: 1px solid var(--border);
@@ -156,14 +314,28 @@
   </div>
 </header>
 
-<!-- Event banner — visible when ?event= is in URL -->
+<!-- Slow WiFi Warning -->
+<div id="slow-banner">
+  <span class="slow-icon">📶</span>
+  Slow connection detected — images will load progressively to save data.
+</div>
+
+<!-- Event banner -->
 <div id="event-banner">
   <div class="ev-label">📸 Live Gallery</div>
   <div class="ev-title" id="ev-title-text"></div>
   <div class="ev-studio" id="ev-studio-text">📷 Supriya Digitals</div>
 </div>
 
+<!-- Camera Tabs -->
+<div id="camera-tabs">
+  <button class="cam-tab active" data-cam="" id="tab-all">📷 All Cameras</button>
+</div>
+
 <div id="grid"></div>
+<div id="sentinel"></div>
+<div id="loading-bar"><span class="spinner"></span>Loading photos…</div>
+
 <div id="empty" style="display:none">
   <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
   <p>No photos yet — check back soon!</p>
@@ -172,9 +344,16 @@
 
 <!-- Lightbox -->
 <div id="lightbox">
+  <div id="lb-actions">
+    <button id="lb-download" title="Download as JPEG">⬇ Download</button>
+  </div>
   <button id="lb-close">&#x2715;</button>
-  <img id="lb-img" src="" alt=""/>
+  <div id="lb-img-wrap">
+    <img id="lb-img" src="" alt=""/>
+    <div id="lb-spinner" style="display:none"><div class="ring"></div></div>
+  </div>
   <div id="lb-info"></div>
+  <div id="lb-swipe-hint">← swipe →</div>
   <div id="lb-nav">
     <button id="lb-prev">&#8592;</button>
     <button id="lb-next">&#8594;</button>
@@ -185,43 +364,70 @@
 const BASE_URL = 'https://shanmuk27.github.io/';
 const API      = 'https://supriyadigitals.store/gallery/api.php';
 
-const grid     = document.getElementById('grid');
-const empty    = document.getElementById('empty');
-const countEl  = document.getElementById('count');
-const loadMore = document.getElementById('load-more');
-const lightbox = document.getElementById('lightbox');
-const lbImg    = document.getElementById('lb-img');
-const lbInfo   = document.getElementById('lb-info');
-const btnShare = document.getElementById('btn-share');
+// Elements
+const grid        = document.getElementById('grid');
+const empty       = document.getElementById('empty');
+const countEl     = document.getElementById('count');
+const loadMore    = document.getElementById('load-more');
+const lightbox    = document.getElementById('lightbox');
+const lbImg       = document.getElementById('lb-img');
+const lbInfo      = document.getElementById('lb-info');
+const lbSpinner   = document.getElementById('lb-spinner');
+const lbDownload  = document.getElementById('lb-download');
+const btnShare    = document.getElementById('btn-share');
+const loadingBar  = document.getElementById('loading-bar');
 
-let images  = [];
-let page    = 1;
-let total   = 0;
-let hasMore = false;
-let lbIndex = 0;
-let lastId  = 0;
+// State
+let images      = [];
+let page        = 1;
+let total       = 0;
+let hasMore     = false;
+let loading     = false;
+let lbIndex     = 0;
+let lastId      = 0;
+let activeCam   = '';       // '' = All cameras
+let preloadImg  = new Image();
+const PAGE_SIZE = 12;       // images per chunk (slow=6, fast=12)
 
-// ── Read event slug from URL ──────────────────────────────────────────────────
+// Unique session ID for viewer tracking
+const SESSION_ID = (() => {
+  let s = sessionStorage.getItem('gallery_session');
+  if (!s) { s = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('gallery_session', s); }
+  return s;
+})();
+
+// ── Connection Quality ────────────────────────────────────────────────────────
+function getConnectionQuality() {
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (!conn) return 'fast';
+  if (conn.saveData) return 'slow';
+  if (['slow-2g', '2g'].includes(conn.effectiveType)) return 'slow';
+  if (conn.effectiveType === '3g') return 'medium';
+  return 'fast';
+}
+
+const connQuality = getConnectionQuality();
+const chunkSize   = connQuality === 'slow' ? 6 : (connQuality === 'medium' ? 9 : PAGE_SIZE);
+
+if (connQuality === 'slow') {
+  document.getElementById('slow-banner').style.display = 'block';
+}
+
+// ── URL params ────────────────────────────────────────────────────────────────
 const urlParams = new URLSearchParams(window.location.search);
 const eventSlug = urlParams.get('event') || '';
 
-// ── Event banner setup ────────────────────────────────────────────────────────
+// ── Event Banner Setup ────────────────────────────────────────────────────────
 if (eventSlug) {
   document.getElementById('event-banner').style.display = 'block';
 
-  // Instant readable name while we wait for the server
-  const prettyName = eventSlug
-    .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  const prettyName = eventSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   document.getElementById('ev-title-text').textContent = prettyName;
   document.title = prettyName + ' — Live Gallery';
 
-  // Shrink header brand when event banner takes over
   document.getElementById('header-brand').innerHTML =
-    '<span style="font-size:.75rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase">📷 Supriya Digitals</span>';
+    '<span id="brand-studio" style="font-size:.75rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase">📷 Supriya Digitals</span>';
 
-  // Show share button so guests can copy the event link
   btnShare.style.display = 'inline-block';
   btnShare.addEventListener('click', () => {
     const link = BASE_URL + '?event=' + encodeURIComponent(eventSlug);
@@ -231,77 +437,202 @@ if (eventSlug) {
     });
   });
 
-  // Fetch real event name + studio name from server and update banner
   fetch(`${API}?action=get_event&slug=${encodeURIComponent(eventSlug)}`)
     .then(r => r.json())
     .then(d => {
       if (d.event_name) {
         document.getElementById('ev-title-text').textContent = d.event_name;
         document.title = d.event_name + ' — Live Gallery';
-        document.querySelector('meta[property="og:title"]').content = d.event_name + ' — Live Gallery';
-        document.querySelector('meta[property="og:url"]').content =
-          BASE_URL + '?event=' + encodeURIComponent(eventSlug);
       }
       if (d.studio_name) {
         document.getElementById('ev-studio-text').textContent = '📷 ' + d.studio_name;
+        const b = document.getElementById('brand-studio');
+        if (b) b.textContent = '📷 ' + d.studio_name;
       }
-    })
-    .catch(() => {});
+    }).catch(() => {});
 }
 
-// ── Initial load ──────────────────────────────────────────────────────────────
+// ── Camera Tabs ───────────────────────────────────────────────────────────────
+async function loadCameraTabs() {
+  const eventParam = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
+  try {
+    const res  = await fetch(`${API}?action=get_cameras${eventParam}`);
+    const data = await res.json();
+    if (!data.cameras || data.cameras.length === 0) return;
+
+    const tabs = document.getElementById('camera-tabs');
+    tabs.classList.add('visible');
+
+    data.cameras.forEach(cam => {
+      const btn = document.createElement('button');
+      btn.className = 'cam-tab';
+      btn.dataset.cam = cam.camera_id;
+      btn.innerHTML = `📷 ${esc(cam.camera_name || cam.camera_id)}<span class="cam-count-badge">…</span>`;
+      btn.addEventListener('click', () => switchCamera(cam.camera_id, btn));
+      tabs.appendChild(btn);
+    });
+
+    // Update tab counts
+    updateTabCounts(data.cameras);
+  } catch (e) {}
+}
+
+function switchCamera(camId, btn) {
+  activeCam = camId;
+  document.querySelectorAll('.cam-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Reset and reload
+  images  = [];
+  page    = 1;
+  total   = 0;
+  hasMore = false;
+  lastId  = 0;
+  grid.innerHTML = '';
+  loadImages();
+}
+
+async function updateTabCounts(cameras) {
+  const eventParam = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
+  for (const cam of cameras) {
+    try {
+      const res  = await fetch(`${API}?action=images&page=1&limit=1&camera=${encodeURIComponent(cam.camera_id)}${eventParam}`);
+      const data = await res.json();
+      const badge = document.querySelector(`.cam-tab[data-cam="${cam.camera_id}"] .cam-count-badge`);
+      if (badge) badge.textContent = data.total ?? 0;
+    } catch (e) {}
+  }
+}
+
+// ── Load Images (paginated) ───────────────────────────────────────────────────
 async function loadImages() {
-  const eventParam = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
-  const res  = await fetch(`${API}?action=images&page=${page}&limit=40${eventParam}`);
-  const data = await res.json();
+  if (loading) return;
+  loading = true;
+  loadingBar.style.display = 'block';
+  loadMore.style.display   = 'none';
 
-  total   = data.total;
-  hasMore = images.length + data.images.length < total;
+  const eventParam  = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
+  const cameraParam = activeCam  ? `&camera=${encodeURIComponent(activeCam)}` : '';
 
-  data.images.forEach(img => {
-    images.push(img);
-    grid.appendChild(makeCard(img, false));
-  });
+  try {
+    const res  = await fetch(`${API}?action=images&page=${page}&limit=${chunkSize}${eventParam}${cameraParam}`);
+    const data = await res.json();
 
-  if (data.images.length > 0) lastId = Math.max(lastId, data.images[0].id);
+    total   = data.total;
+    hasMore = images.length + data.images.length < total;
 
-  updateUI();
-  page++;
+    data.images.forEach(img => {
+      images.push(img);
+      grid.appendChild(makeCard(img, false));
+    });
+
+    if (data.images.length > 0) lastId = Math.max(lastId, data.images[0].id);
+    page++;
+    updateUI();
+  } catch (e) {
+    countEl.textContent = 'Error loading';
+  } finally {
+    loading = false;
+    loadingBar.style.display = 'none';
+  }
 }
 
-// ── Poll for new images every 10 s ────────────────────────────────────────────
+// ── Poll for new images ────────────────────────────────────────────────────────
 async function poll() {
-  if (!lastId) return;
-  const eventParam = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
-  const res  = await fetch(`${API}?action=images&since=${lastId}${eventParam}`);
-  const data = await res.json();
-  if (!data.images || data.images.length === 0) return;
+  // FIX: if no images are loaded yet, do a fresh load instead of skipping
+  if (!lastId) {
+    if (!loading) await loadImages();
+    return;
+  }
+  const eventParam  = eventSlug ? `&event=${encodeURIComponent(eventSlug)}` : '';
+  const cameraParam = activeCam  ? `&camera=${encodeURIComponent(activeCam)}` : '';
 
-  data.images.forEach(img => {
-    images.unshift(img);
-    grid.insertBefore(makeCard(img, true), grid.firstChild);
-  });
+  try {
+    const res  = await fetch(`${API}?action=images&since=${lastId}${eventParam}${cameraParam}`);
+    const data = await res.json();
+    if (!data.images || data.images.length === 0) return;
 
-  lastId = data.images[0].id;
-  total  = data.total;
-  updateUI();
+    data.images.forEach(img => {
+      images.unshift(img);
+      grid.insertBefore(makeCard(img, true), grid.firstChild);
+    });
+
+    lastId = data.images[0].id;
+    total  = data.total;
+    updateUI();
+  } catch (e) {}
 }
 
+// ── Make Card ─────────────────────────────────────────────────────────────────
 function makeCard(img, isNew) {
   const div = document.createElement('div');
   div.className = 'photo' + (isNew ? ' new' : '');
   div.dataset.id = img.id;
+
   const el = document.createElement('img');
-  el.src = img.url; el.alt = ''; el.loading = 'lazy'; el.decoding = 'async';
+  el.alt     = '';
+  el.decoding = 'async';
+
+  // Lazy load: use IntersectionObserver for off-screen images
+  if (connQuality === 'slow') {
+    el.dataset.src = img.url;
+    el.src = ''; // placeholder
+    imgObserver.observe(el);
+  } else {
+    el.loading = 'lazy';
+    el.src = img.url;
+  }
+
   div.appendChild(el);
+
+  // Camera badge (shown in "All" tab)
+  if (!activeCam && img.camera_name) {
+    const badge = document.createElement('div');
+    badge.className = 'cam-badge';
+    badge.textContent = '📷 ' + img.camera_name;
+    div.appendChild(badge);
+  }
+
   div.addEventListener('click', () => openLightbox(img));
   return div;
 }
 
+// ── Lazy image observer ───────────────────────────────────────────────────────
+const imgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      if (img.dataset.src) {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      }
+      imgObserver.unobserve(img);
+    }
+  });
+}, { rootMargin: '300px' });
+
+// ── Auto-load sentinel (IntersectionObserver scroll) ─────────────────────────
+const sentinel = document.getElementById('sentinel');
+const sentinelObserver = new IntersectionObserver(async ([entry]) => {
+  if (entry.isIntersecting && hasMore && !loading) {
+    await loadImages();
+  }
+}, { rootMargin: '600px' });
+sentinelObserver.observe(sentinel);
+
+// ── UI Update ─────────────────────────────────────────────────────────────────
 function updateUI() {
-  countEl.textContent    = `${total} photo${total !== 1 ? 's' : ''}`;
-  empty.style.display    = total === 0 ? 'flex' : 'none';
-  loadMore.style.display = hasMore ? 'block' : 'none';
+  const label        = activeCam ? `${total} photo${total !== 1 ? 's' : ''}` : `${total} photo${total !== 1 ? 's' : ''}`;
+  countEl.textContent = label;
+  empty.style.display = total === 0 ? 'flex' : 'none';
+  // Show "Load more" button as fallback only
+  loadMore.style.display = hasMore && !loading ? 'block' : 'none';
+
+  // Update All-cameras tab count
+  const allTab = document.getElementById('tab-all');
+  if (allTab && !activeCam) {
+    allTab.querySelector('.cam-count-badge') && (allTab.querySelector('.cam-count-badge').textContent = total);
+  }
 }
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
@@ -309,24 +640,131 @@ function openLightbox(img) {
   lbIndex = images.findIndex(i => i.id === img.id);
   showLb();
   lightbox.classList.add('open');
-}
-function showLb() {
-  const img = images[lbIndex];
-  lbImg.src = img.url;
-  const kb  = img.file_size ? Math.round(img.file_size / 1024) + ' KB' : '';
-  const dim = img.width && img.height ? `${img.width}×${img.height}` : '';
-  lbInfo.textContent = [dim, kb].filter(Boolean).join('  ·  ');
+  document.body.style.overflow = 'hidden';
 }
 
-document.getElementById('lb-close').onclick = () => lightbox.classList.remove('open');
-document.getElementById('lb-prev').onclick  = () => { if (lbIndex < images.length - 1) { lbIndex++; showLb(); } };
-document.getElementById('lb-next').onclick  = () => { if (lbIndex > 0) { lbIndex--; showLb(); } };
+function showLb() {
+  const img = images[lbIndex];
+  lbSpinner.style.display = 'flex';
+  lbImg.style.opacity = '0.3';
+
+  lbImg.onload = () => {
+    lbSpinner.style.display = 'none';
+    lbImg.style.opacity = '1';
+    preloadAdjacent();
+  };
+  lbImg.src = img.url;
+
+  const kb  = img.file_size ? Math.round(img.file_size / 1024) + ' KB' : '';
+  const dim = img.width && img.height ? `${img.width}×${img.height}` : '';
+  const cam = img.camera_name ? '📷 ' + img.camera_name : '';
+  lbInfo.textContent = [dim, kb, cam].filter(Boolean).join('  ·  ');
+
+  lbDownload.textContent = img.url.endsWith('.webp') ? '⬇ Download as JPEG' : '⬇ Download';
+  lbDownload.disabled = false;
+  lbDownload.onclick = () => downloadImage(img);
+}
+
+// Preload next + previous images
+function preloadAdjacent() {
+  [lbIndex - 1, lbIndex + 1].forEach(i => {
+    if (i >= 0 && i < images.length) {
+      const pre = new Image();
+      pre.src = images[i].url;
+    }
+  });
+
+  // Trigger load of next page if near the end
+  if (lbIndex >= images.length - 3 && hasMore && !loading) {
+    loadImages();
+  }
+}
+
+// ── Download with WebP → JPEG conversion ─────────────────────────────────────
+async function downloadImage(img) {
+  lbDownload.disabled = true;
+  lbDownload.textContent = '⏳ Converting…';
+
+  try {
+    const response = await fetch(img.url);
+    const blob     = await response.blob();
+
+    const isWebP = blob.type === 'image/webp' || img.url.toLowerCase().endsWith('.webp');
+
+    if (isWebP) {
+      // Convert WebP → JPEG client-side using canvas
+      const bitmap = await createImageBitmap(blob);
+      const canvas = document.createElement('canvas');
+      canvas.width  = bitmap.width;
+      canvas.height = bitmap.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(bitmap, 0, 0);
+
+      canvas.toBlob(jpegBlob => {
+        const url = URL.createObjectURL(jpegBlob);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = `photo_${img.id}.jpg`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        lbDownload.textContent = '✓ Downloaded';
+        setTimeout(() => {
+          lbDownload.textContent = '⬇ Download as JPEG';
+          lbDownload.disabled = false;
+        }, 2000);
+      }, 'image/jpeg', 0.92);
+
+    } else {
+      // Direct download
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      const ext = img.url.split('.').pop() || 'jpg';
+      a.href     = url;
+      a.download = `photo_${img.id}.${ext}`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      lbDownload.textContent = '✓ Downloaded';
+      setTimeout(() => {
+        lbDownload.textContent = '⬇ Download';
+        lbDownload.disabled = false;
+      }, 2000);
+    }
+  } catch (e) {
+    lbDownload.textContent = '✗ Failed';
+    lbDownload.disabled = false;
+  }
+}
+
+// ── Lightbox Controls ─────────────────────────────────────────────────────────
+document.getElementById('lb-close').onclick = closeLightbox;
+document.getElementById('lb-prev').onclick  = () => navigateLb(-1);
+document.getElementById('lb-next').onclick  = () => navigateLb(+1);
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function navigateLb(dir) {
+  const next = lbIndex + dir;
+  if (next < 0 || next >= images.length) return;
+  lbIndex = next;
+  showLb();
+}
 
 document.addEventListener('keydown', e => {
   if (!lightbox.classList.contains('open')) return;
-  if (e.key === 'Escape')     lightbox.classList.remove('open');
-  if (e.key === 'ArrowLeft')  { if (lbIndex > 0) { lbIndex--; showLb(); } }
-  if (e.key === 'ArrowRight') { if (lbIndex < images.length - 1) { lbIndex++; showLb(); } }
+  if (e.key === 'Escape')     closeLightbox();
+  if (e.key === 'ArrowLeft')  navigateLb(-1);
+  if (e.key === 'ArrowRight') navigateLb(+1);
+});
+
+// Touch swipe support
+let touchStartX = 0;
+lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+lightbox.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) navigateLb(diff > 0 ? 1 : -1);
 });
 
 loadMore.onclick = async () => {
@@ -335,8 +773,31 @@ loadMore.onclick = async () => {
   loadMore.disabled = false;
 };
 
+// ── Viewer Ping ───────────────────────────────────────────────────────────────
+function sendViewerPing() {
+  const fd = new FormData();
+  fd.append('action',  'viewer_ping');
+  fd.append('session', SESSION_ID);
+  fd.append('event',   eventSlug);
+  navigator.sendBeacon ? navigator.sendBeacon(API, fd) : fetch(API, { method:'POST', body:fd }).catch(()=>{});
+}
+
+// ── Helper ────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
 loadImages();
-setInterval(poll, 10000);
+loadCameraTabs();
+sendViewerPing();
+
+// Add badge to All tab
+const allTab = document.getElementById('tab-all');
+allTab.innerHTML += '<span class="cam-count-badge">…</span>';
+
+setInterval(poll, 10000);          // poll new images every 10s
+setInterval(sendViewerPing, 30000); // ping viewer presence every 30s
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gallery Admin</title>
+<title>Supriya Digitals — Admin</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -81,17 +81,20 @@
 
   /* ── Stats bar ── */
   .stats-bar {
-    display: flex; gap: 16px; padding: 16px 24px; flex-wrap: wrap;
+    display: flex; gap: 12px; padding: 16px 24px; flex-wrap: wrap;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
   .stat {
     background: var(--bg); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 12px 20px;
-    min-width: 120px;
+    border-radius: var(--radius); padding: 12px 18px;
+    min-width: 110px;
   }
   .stat .val { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
-  .stat .lbl { font-size: .75rem; color: var(--dim); margin-top: 2px; }
+  .stat .lbl { font-size: .72rem; color: var(--dim); margin-top: 2px; }
+  .stat.viewers .val  { color: #7c3aed; }
+  .stat.upload-q .val { color: var(--warn); }
+  .stat.convert-q .val { color: #0891b2; }
 
   /* ── Camera section ── */
   #camera-section {
@@ -164,16 +167,12 @@
     letter-spacing: .08em; color: var(--dim); margin-bottom: 14px;
     display: flex; align-items: center; gap: 8px;
   }
-  .section-title::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* ── Event Creator Card ── */
+  /* ── Event Creator ── */
   .event-creator {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
   }
   .event-form-row {
     display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
@@ -226,7 +225,7 @@
   }
   .btn-show-qr:hover { background: #1d4ed8; }
 
-  /* ── QR Poster Modal ── */
+  /* ── QR Modal ── */
   #qr-modal {
     display: none; position: fixed; inset: 0; z-index: 300;
     background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
@@ -238,78 +237,43 @@
     animation: popIn .25s cubic-bezier(.175,.885,.32,1.275);
   }
   @keyframes popIn { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-  /* The printable poster */
   .qr-poster {
     background: linear-gradient(160deg, #0f0c29, #302b63, #24243e);
-    border-radius: 20px;
-    padding: 36px 28px 28px;
-    text-align: center;
-    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    border-radius: 20px; padding: 36px 28px 28px;
+    text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.5);
     position: relative; overflow: hidden;
   }
   .qr-poster::before {
-    content: '';
-    position: absolute; top: -60px; right: -60px;
+    content: ''; position: absolute; top: -60px; right: -60px;
     width: 180px; height: 180px; border-radius: 50%;
     background: rgba(212,169,74,.15);
   }
   .qr-poster::after {
-    content: '';
-    position: absolute; bottom: -40px; left: -40px;
+    content: ''; position: absolute; bottom: -40px; left: -40px;
     width: 130px; height: 130px; border-radius: 50%;
     background: rgba(37,99,235,.2);
   }
   .qr-stars { font-size: .9rem; letter-spacing: 4px; color: #d4a94a; margin-bottom: 10px; }
-  .qr-event-title {
-    font-size: 1.35rem; font-weight: 800; color: #fff;
-    line-height: 1.3; margin-bottom: 6px;
-    text-shadow: 0 2px 12px rgba(0,0,0,.4);
-  }
-  .qr-subtitle {
-    font-size: .75rem; color: rgba(255,255,255,.45);
-    letter-spacing: .1em; text-transform: uppercase;
-    margin-bottom: 24px;
-  }
-  .qr-frame {
-    background: #fff;
-    border-radius: 16px;
-    padding: 12px;
-    display: inline-block;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-    position: relative; z-index: 1;
-  }
+  .qr-event-title { font-size: 1.35rem; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 6px; }
+  .qr-subtitle { font-size: .75rem; color: rgba(255,255,255,.45); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 24px; }
+  .qr-frame { background: #fff; border-radius: 16px; padding: 12px; display: inline-block; box-shadow: 0 8px 32px rgba(0,0,0,.4); position: relative; z-index: 1; }
   .qr-frame img { width: 220px; height: 220px; display: block; border-radius: 8px; }
-  .qr-tap-hint {
-    font-size: .7rem; color: rgba(255,255,255,.45);
-    margin: 14px 0 8px; letter-spacing: .05em;
-  }
-  .qr-divider {
-    border: none; border-top: 1px solid rgba(255,255,255,.12);
-    margin: 14px 0;
-  }
-  .qr-studio-row {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
+  .qr-tap-hint { font-size: .7rem; color: rgba(255,255,255,.45); margin: 14px 0 8px; letter-spacing: .05em; }
+  .qr-divider { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 14px 0; }
+  .qr-studio-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
   .qr-camera-icon { font-size: 1.1rem; }
-  .qr-studio-name {
-    font-size: .88rem; font-weight: 700; color: #d4a94a;
-    letter-spacing: .12em; text-transform: uppercase;
-  }
-
-  /* ── Print: hide everything except the poster ── */
+  .qr-studio-name { font-size: .88rem; font-weight: 700; color: #d4a94a; letter-spacing: .12em; text-transform: uppercase; }
   @media print {
-    body > *                     { display: none !important; }
-    #qr-modal                    { display: block !important; position: static !important;
-                                   background: none !important; padding: 0 !important; }
-    .qr-modal-inner              { box-shadow: none !important; padding: 0 !important; background: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body > * { display: none !important; }
+    #qr-modal { display: block !important; position: static !important; background: none !important; padding: 0 !important; }
+    .qr-modal-inner { box-shadow: none !important; padding: 0 !important; background: none !important; max-width: 420px; margin: 0 auto; }
     .qr-actions, .qr-modal-close { display: none !important; }
-    #qrPoster                    { box-shadow: none !important; max-width: 100% !important;
-                                   break-inside: avoid; }
-    #qrPoster::before,
-    #qrPoster::after             { display: none !important; }
+    #qrPoster { break-inside: avoid; border-radius: 20px; background: linear-gradient(160deg,#0f0c29,#302b63,#24243e) !important; }
+    .qr-event-title { color: #fff !important; }
+    .qr-stars, .qr-studio-name { color: #d4a94a !important; }
+    .qr-subtitle, .qr-tap-hint { color: rgba(255,255,255,.6) !important; }
   }
-
   .qr-modal-close {
     position: absolute; top: -14px; right: -14px;
     background: rgba(255,255,255,.15); backdrop-filter: blur(4px);
@@ -319,10 +283,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .qr-modal-close:hover { background: rgba(220,38,38,.6); }
-
-  .qr-actions {
-    display: flex; gap: 10px; justify-content: center; margin-top: 14px;
-  }
+  .qr-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
   .qr-actions button {
     background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
     color: #fff; border-radius: 8px; padding: 8px 18px;
@@ -330,7 +291,7 @@
   }
   .qr-actions button:hover { background: rgba(255,255,255,.2); }
 
-  /* ── Active Event Banner ── */
+  /* ── Active Event Bar ── */
   .active-event-bar {
     display: flex; align-items: center; gap: 14px;
     background: linear-gradient(135deg, #052e16, #14532d);
@@ -340,27 +301,17 @@
   }
   .active-event-bar .ae-dot {
     width: 10px; height: 10px; border-radius: 50%;
-    background: #4ade80; flex-shrink: 0;
-    animation: pulse 2s infinite;
+    background: #4ade80; flex-shrink: 0; animation: pulse 2s infinite;
   }
-  .active-event-bar .ae-label {
-    font-size: .68rem; color: #4ade80;
-    text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
-  }
-  .active-event-bar .ae-name {
-    font-size: 1rem; font-weight: 700; color: #fff; flex: 1;
-  }
-  .active-event-bar .ae-slug {
-    font-size: .72rem; color: rgba(255,255,255,.45);
-    font-family: monospace;
-  }
+  .active-event-bar .ae-label { font-size: .68rem; color: #4ade80; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+  .active-event-bar .ae-name  { font-size: 1rem; font-weight: 700; color: #fff; flex: 1; }
+  .active-event-bar .ae-slug  { font-size: .72rem; color: rgba(255,255,255,.45); font-family: monospace; }
   .btn-deactivate {
     background: rgba(220,38,38,.2); border: 1px solid rgba(220,38,38,.4);
     color: #fca5a5; border-radius: 6px;
     padding: 5px 12px; font-size: .75rem; cursor: pointer; font-weight: 600;
   }
   .btn-deactivate:hover { background: rgba(220,38,38,.4); }
-
   .no-active-bar {
     display: flex; align-items: center; gap: 10px;
     background: var(--surface); border: 1px dashed var(--border);
@@ -379,21 +330,13 @@
   .event-row .ev-info { flex: 1; min-width: 160px; }
   .event-row .ev-name { font-weight: 600; font-size: .9rem; }
   .event-row .ev-meta { font-size: .72rem; color: var(--dim); margin-top: 2px; }
-  .event-row .ev-badge {
-    background: #eff6ff; color: var(--accent);
-    border-radius: 20px; padding: 3px 10px; font-size: .72rem; font-weight: 600;
-  }
+  .event-row .ev-badge { background: #eff6ff; color: var(--accent); border-radius: 20px; padding: 3px 10px; font-size: .72rem; font-weight: 600; }
   .ev-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: .75rem; cursor: pointer; color: var(--dim); }
   .ev-btn:hover { border-color: var(--accent); color: var(--accent); }
   .ev-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
-  .ev-btn.set-active {
-    background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; font-weight: 600;
-  }
+  .ev-btn.set-active { background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; font-weight: 600; }
   .ev-btn.set-active:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
-  .ev-btn.is-active {
-    background: #14532d; border-color: #16a34a; color: #4ade80; font-weight: 700;
-    cursor: default;
-  }
+  .ev-btn.is-active { background: #14532d; border-color: #16a34a; color: #4ade80; font-weight: 700; cursor: default; }
   .no-events { color: var(--dim); font-size: .85rem; font-style: italic; padding: 10px 0; }
 
   /* ── Upload zone ── */
@@ -414,11 +357,26 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 6px; padding: 8px 12px; font-size: .82rem;
   }
-  .queue-item .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .queue-item .status { font-size: .75rem; white-space: nowrap; }
+  .queue-item .qi-name  { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .queue-item .qi-size  { font-size: .72rem; color: var(--dim); white-space: nowrap; }
+  .queue-item .qi-retry { font-size: .72rem; color: var(--warn); white-space: nowrap; }
+
+  /* Progress bar */
+  .queue-item .qi-progress-wrap {
+    flex: 1; height: 4px; background: var(--border);
+    border-radius: 2px; overflow: hidden;
+    display: none;
+  }
+  .queue-item .qi-progress-bar {
+    height: 100%; background: var(--accent);
+    width: 0%; transition: width .3s;
+  }
+  .queue-item.uploading .qi-progress-wrap { display: block; }
+
   .status.uploading { color: var(--accent); }
   .status.done      { color: var(--success); }
   .status.fail      { color: var(--danger); }
+  .status.retry     { color: var(--warn); }
   #upload-btn {
     margin-top: 14px; padding: 9px 24px;
     background: var(--accent); color: #fff;
@@ -427,6 +385,63 @@
   }
   #upload-btn:hover { opacity: .88; }
   #upload-btn:disabled { opacity: .5; cursor: default; }
+
+  /* ── Photo Grid Section ── */
+  .grid-toolbar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .grid-toolbar .camera-filter {
+    display: flex; align-items: center; gap: 6px;
+    font-size: .78rem; color: var(--dim);
+  }
+  .grid-toolbar select {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 10px; font-size: .78rem;
+    background: var(--surface); color: var(--text); cursor: pointer;
+    outline: none;
+  }
+  #btn-select-mode {
+    background: none; border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 14px;
+    font-size: .78rem; cursor: pointer; color: var(--dim);
+    transition: all .2s;
+  }
+  #btn-select-mode:hover, #btn-select-mode.active {
+    border-color: var(--accent); color: var(--accent);
+    background: #eff6ff;
+  }
+
+  /* Bulk delete toolbar (visible in select mode) */
+  #bulk-toolbar {
+    display: none;
+    align-items: center; gap: 10px;
+    background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 8px; padding: 10px 16px; margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  #bulk-toolbar.visible { display: flex; }
+  #bulk-count { font-size: .82rem; font-weight: 600; color: var(--danger); flex: 1; }
+  #btn-select-all {
+    background: none; border: 1px solid var(--border);
+    border-radius: 5px; padding: 5px 12px;
+    font-size: .75rem; cursor: pointer; color: var(--dim);
+  }
+  #btn-select-all:hover { border-color: var(--accent); color: var(--accent); }
+  #btn-bulk-delete {
+    background: var(--danger); color: #fff;
+    border: none; border-radius: 5px;
+    padding: 7px 16px; font-size: .78rem;
+    cursor: pointer; font-weight: 600;
+    transition: opacity .2s;
+  }
+  #btn-bulk-delete:hover { opacity: .88; }
+  #btn-bulk-delete:disabled { opacity: .5; cursor: default; }
+  #btn-cancel-select {
+    background: none; border: 1px solid var(--border);
+    border-radius: 5px; padding: 5px 12px;
+    font-size: .75rem; cursor: pointer; color: var(--dim);
+  }
 
   /* ── Photo grid ── */
   #photo-grid {
@@ -437,9 +452,38 @@
   .thumb {
     position: relative; overflow: hidden;
     border-radius: 6px; background: var(--border); aspect-ratio: 1;
+    cursor: pointer;
   }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s, opacity .3s; }
   .thumb:hover img { transform: scale(1.06); }
+
+  /* Checkbox overlay */
+  .thumb .thumb-check {
+    position: absolute; top: 6px; left: 6px;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,.8);
+    border-radius: 4px;
+    background: rgba(0,0,0,.3);
+    display: none;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    z-index: 2;
+  }
+  .select-mode .thumb .thumb-check { display: flex; }
+  .thumb.selected .thumb-check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .thumb.selected .thumb-check::after {
+    content: '✓';
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .thumb.selected img { opacity: .6; }
+  .thumb.selected { outline: 2px solid var(--accent); }
+
   .thumb .del-btn {
     position: absolute; top: 5px; right: 5px;
     background: rgba(0,0,0,.65); color: #fff;
@@ -447,7 +491,9 @@
     width: 26px; height: 26px; cursor: pointer;
     font-size: .85rem; display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: opacity .2s;
+    z-index: 2;
   }
+  .select-mode .thumb .del-btn { display: none; }
   .thumb:hover .del-btn { opacity: 1; }
   .thumb .del-btn:hover { background: var(--danger); }
   .thumb .thumb-info {
@@ -458,7 +504,26 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .thumb:hover .thumb-info { opacity: 1; }
-  #grid-loading { color: var(--dim); font-size: .85rem; }
+  #grid-loading { color: var(--dim); font-size: .85rem; margin-bottom: 10px; }
+
+  /* ── New Photos Banner ── */
+  #new-photos-bar {
+    display: none;
+    align-items: center; gap: 10px;
+    background: #eff6ff; border: 1px solid #93c5fd;
+    border-radius: 8px; padding: 10px 16px; margin-bottom: 14px;
+    animation: slideDown .3s ease;
+  }
+  #new-photos-bar.visible { display: flex; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  #new-photos-bar .npb-msg { flex: 1; font-size: .82rem; color: var(--accent); font-weight: 600; }
+  #new-photos-bar .npb-refresh {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 5px; padding: 6px 14px; font-size: .78rem;
+    cursor: pointer; font-weight: 600;
+  }
+  .ev-btn.del-imgs { color: #b45309; border-color: #fcd34d; background: #fffbeb; }
+  .ev-btn.del-imgs:hover { color: #fff; background: #d97706; border-color: #d97706; }
 
   /* ── Toast ── */
   #toast {
@@ -476,7 +541,7 @@
 <!-- Login Screen -->
 <div id="login-screen">
   <div class="login-box">
-    <h1>&#128247; Gallery Admin</h1>
+    <h1>&#128247; Supriya Digitals</h1>
     <p>Enter your password to manage events &amp; photos</p>
     <div class="field">
       <label>Password</label>
@@ -490,7 +555,7 @@
 <!-- Main App -->
 <div id="app">
   <header>
-    <h1>&#128247; Gallery Admin</h1>
+    <h1>&#128247; Supriya Digitals</h1>
     <div class="right">
       <a href="https://shanmuk27.github.io/" target="_blank" style="color:var(--accent);text-decoration:none;font-size:.82rem">&#8599; View gallery</a>
       <button id="logout-btn" onclick="logout()">Logout</button>
@@ -504,6 +569,9 @@
     <div class="stat"><div class="val" id="stat-time">—</div><div class="lbl">Last upload</div></div>
     <div class="stat"><div class="val" id="stat-cam-count" style="color:var(--connected)">—</div><div class="lbl">Cameras online</div></div>
     <div class="stat"><div class="val" id="stat-events" style="color:#7c3aed">—</div><div class="lbl">Active events</div></div>
+    <div class="stat viewers"><div class="val" id="stat-viewers">—</div><div class="lbl">👥 Live viewers</div></div>
+    <div class="stat upload-q"><div class="val" id="stat-upload-q">—</div><div class="lbl">📤 Upload queue</div></div>
+    <div class="stat convert-q"><div class="val" id="stat-convert-q">—</div><div class="lbl">🔄 Convert queue</div></div>
   </div>
 
   <!-- Camera Status Section -->
@@ -518,18 +586,16 @@
 
   <main>
 
-    <!-- ═══ EVENT MANAGER ═══ -->
+    <!-- Event Manager -->
     <div class="section">
       <div class="section-title">📅 Event Manager</div>
-
-      <!-- Create form -->
       <div class="event-creator">
         <div class="event-form-row">
           <div class="field-group">
             <label>Event Name</label>
             <input type="text" id="eventName" placeholder="e.g. Madhusudhana Rao Weds Pavani"/>
           </div>
-          <div class="field-group" style="max-width:220px">
+          <div class="field-group" style="max-width:220px;display:none">
             <label>Studio Name</label>
             <input type="text" id="studioName" value="Supriya Digitals"/>
           </div>
@@ -537,8 +603,6 @@
             <button class="btn-create-event" id="btn-create-event">✨ Create Event</button>
           </div>
         </div>
-
-        <!-- Result bar (hidden until event created) -->
         <div id="event-result">
           <div class="event-result-bar">
             <span style="font-size:1rem">🔗</span>
@@ -550,36 +614,59 @@
       </div>
     </div>
 
-    <!-- Events list -->
+    <!-- Events List -->
     <div class="section">
       <div class="section-title">📋 All Events</div>
-
-      <!-- Active event status bar -->
       <div id="active-event-bar" class="no-active-bar">
-        <span>⏸️</span> <span>No event is currently active — laptop processor is paused.</span>
+        <span>⏸️</span><span>No event is currently active — laptop processor is paused.</span>
       </div>
-
       <div id="events-list" class="events-list">
         <div class="no-events">Loading events…</div>
       </div>
     </div>
 
-    <!-- ═══ UPLOAD ═══ -->
+    <!-- Upload -->
     <div class="section">
       <div class="section-title">📤 Upload Photos</div>
       <div id="drop-zone" onclick="document.getElementById('file-input').click()">
         <svg width="40" height="40" fill="none" stroke="#888" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <p>Click or drag &amp; drop photos here</p>
-        <span>JPG, PNG, WebP, GIF — max 20 MB each</span>
+        <span>JPG, PNG, WebP, GIF — max 20 MB each · WebP files auto-convert on upload</span>
       </div>
       <input type="file" id="file-input" accept="image/*" multiple/>
       <div id="queue"></div>
       <button id="upload-btn" onclick="uploadAll()">Upload selected photos</button>
     </div>
 
-    <!-- ═══ PHOTO GRID ═══ -->
+    <!-- Photo Grid -->
     <div class="section">
       <div class="section-title">🖼️ All Photos</div>
+
+      <!-- New photos notification -->
+      <div id="new-photos-bar">
+        <span class="npb-msg" id="npb-msg">📸 New photos uploaded!</span>
+        <button class="npb-refresh" onclick="dismissNewPhotos()">Refresh Grid</button>
+        <button style="background:none;border:none;cursor:pointer;color:var(--dim);font-size:.85rem" onclick="document.getElementById('new-photos-bar').classList.remove('visible')">✕</button>
+      </div>
+
+      <div class="grid-toolbar">
+        <div class="camera-filter">
+          <span>📷 Camera:</span>
+          <select id="cam-filter" onchange="applyFilters()">
+            <option value="">All cameras</option>
+          </select>
+        </div>
+        <button id="btn-select-mode" onclick="toggleSelectMode()">☑ Select</button>
+      </div>
+
+      <!-- Bulk delete toolbar -->
+      <div id="bulk-toolbar">
+        <span id="bulk-count">0 selected</span>
+        <button id="btn-select-all" onclick="selectAll()">Select all</button>
+        <button id="btn-bulk-delete" onclick="bulkDelete()" disabled>🗑️ Delete selected</button>
+        <button id="btn-cancel-select" onclick="toggleSelectMode()">✕ Cancel</button>
+      </div>
+
       <div id="grid-loading">Loading…</div>
       <div id="photo-grid"></div>
     </div>
@@ -595,9 +682,7 @@
       <div class="qr-stars">✦ ✦ ✦ ✦ ✦</div>
       <div class="qr-event-title" id="posterEventName"></div>
       <div class="qr-subtitle">Scan to view your live photos</div>
-      <div class="qr-frame">
-        <img id="qrImage" src="" alt="QR Code"/>
-      </div>
+      <div class="qr-frame"><img id="qrImage" src="" alt="QR Code"/></div>
       <div class="qr-tap-hint">📱 Open camera &amp; point at QR code</div>
       <hr class="qr-divider"/>
       <div class="qr-studio-row">
@@ -618,21 +703,26 @@
 <script>
 const API = 'https://supriyadigitals.store/gallery/api.php';
 
-let password     = '';
-let pendingFiles = [];
-let camPollTimer = null;
-let currentEventUrl  = '';
-let currentEventSlug = '';
+let password          = '';
+let pendingFiles      = [];
+let camPollTimer      = null;
+let statsTimer        = null;
+let currentEventUrl   = '';
+let currentEventSlug  = '';
+let activeSlug        = '';
+
+// Select mode state
+let selectMode     = false;
+let selectedIds    = new Set();
+let allPhotos      = [];       // full list for select-all
+let activeCamera   = '';       // '' = all
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function login() {
   const pass = document.getElementById('pass-input').value.trim();
   if (!pass) return;
   const res = await fetch(`${API}?action=stats&pass=${encodeURIComponent(pass)}`);
-  if (!res.ok) {
-    document.getElementById('login-error').style.display = 'block';
-    return;
-  }
+  if (!res.ok) { document.getElementById('login-error').style.display = 'block'; return; }
   password = pass;
   localStorage.setItem('gallery_pass', pass);
   showApp();
@@ -640,11 +730,12 @@ async function login() {
 
 function logout() {
   clearInterval(camPollTimer);
+  clearInterval(statsTimer);
   localStorage.removeItem('gallery_pass');
   password = '';
-  document.getElementById('app').style.display = 'none';
+  document.getElementById('app').style.display         = 'none';
   document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('pass-input').value = '';
+  document.getElementById('pass-input').value           = '';
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -653,24 +744,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     const res = await fetch(`${API}?action=stats&pass=${encodeURIComponent(saved)}`);
     if (res.ok) { password = saved; showApp(); }
   }
-  document.getElementById('pass-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') login();
-  });
-  document.getElementById('eventName').addEventListener('keydown', e => {
-    if (e.key === 'Enter') submitNewEvent();
-  });
+  document.getElementById('pass-input').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  document.getElementById('eventName').addEventListener('keydown', e => { if (e.key === 'Enter') submitNewEvent(); });
   document.getElementById('btn-create-event').addEventListener('click', submitNewEvent);
 
-  // File picker events
   const zone  = document.getElementById('drop-zone');
   const input = document.getElementById('file-input');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('drag-over');
-    addFiles(e.dataTransfer.files);
-  });
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); addFiles(e.dataTransfer.files); });
   input.addEventListener('change', () => addFiles(input.files));
 });
 
@@ -681,24 +763,120 @@ function showApp() {
   loadPhotos();
   loadEvents();
   loadCameraStatus();
+  loadViewerCount();
+  loadAgentQueue();
+  loadCameraFilter();
   camPollTimer = setInterval(loadCameraStatus, 15000);
+  statsTimer   = setInterval(() => { loadStats(); loadViewerCount(); loadAgentQueue(); }, 15000);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
 async function loadStats() {
-  const res  = await fetch(`${API}?action=stats&pass=${encodeURIComponent(password)}`);
-  const data = await res.json();
-  document.getElementById('stat-total').textContent = data.total ?? '—';
-  document.getElementById('stat-size').textContent  = formatSize(data.total_size);
-  const last = data.recent?.[0];
-  document.getElementById('stat-time').textContent  = last ? timeAgo(last.uploaded_at) : 'Never';
+  try {
+    const res  = await fetch(`${API}?action=stats&pass=${encodeURIComponent(password)}`);
+    const data = await res.json();
+    document.getElementById('stat-total').textContent = data.total ?? '—';
+    document.getElementById('stat-size').textContent  = formatSize(data.total_size);
+    const last = data.recent?.[0];
+    document.getElementById('stat-time').textContent  = last ? timeAgo(last.uploaded_at) : 'Never';
+    checkForNewPhotos(data);   // detect new photos and show banner
+  } catch(e) {}
+}
+
+// ── Viewer Count ──────────────────────────────────────────────────────────────
+async function loadViewerCount() {
+  try {
+    const res  = await fetch(`${API}?action=get_viewer_count&pass=${encodeURIComponent(password)}`);
+    const data = await res.json();
+    document.getElementById('stat-viewers').textContent = data.viewers ?? 0;
+  } catch(e) { document.getElementById('stat-viewers').textContent = '—'; }
+}
+
+// ── Agent Queue Stats ─────────────────────────────────────────────────────────
+async function loadAgentQueue() {
+  try {
+    const res  = await fetch(`${API}?action=get_agent_queue&pass=${encodeURIComponent(password)}`);
+    const data = await res.json();
+    document.getElementById('stat-upload-q').textContent  = data.upload_queue  ?? 0;
+    document.getElementById('stat-convert-q').textContent = data.convert_queue ?? 0;
+  } catch(e) {
+    document.getElementById('stat-upload-q').textContent  = '—';
+    document.getElementById('stat-convert-q').textContent = '—';
+  }
+}
+
+// ── Camera filter for photo grid ──────────────────────────────────────────────
+async function loadCameraFilter() {
+  try {
+    const res  = await fetch(`${API}?action=get_cameras`);
+    const data = await res.json();
+    const sel  = document.getElementById('cam-filter');
+    (data.cameras || []).forEach(cam => {
+      const opt = document.createElement('option');
+      opt.value = cam.camera_id;
+      opt.textContent = cam.camera_name || cam.camera_id;
+      sel.appendChild(opt);
+    });
+  } catch(e) {}
+}
+
+function applyFilters() {
+  activeCamera = document.getElementById('cam-filter').value;
+  loadPhotos();
+}
+
+async function deleteEventImages(slug, eventName, photoCount) {
+  const msg = photoCount > 0
+    ? `Delete all ${photoCount} photo(s) for "${eventName}"?\n\nThe event itself will remain, only the photos are removed. This cannot be undone.`
+    : `Delete all photos for "${eventName}"? This cannot be undone.`;
+  if (!confirm(msg)) return;
+
+  const fd = new FormData();
+  fd.append('action', 'delete_event_images');
+  fd.append('pass',   password);
+  fd.append('slug',   slug);
+
+  try {
+    const res  = await fetch(API, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.ok) {
+      toast(`🗑️ ${data.deleted} photo(s) deleted from "${eventName}"`);
+      loadEvents();
+      loadPhotos();
+      loadStats();
+    } else {
+      toast('Error: ' + (data.error ?? 'Unknown'));
+    }
+  } catch(e) {
+    toast('Network error');
+  }
+}
+
+// ── New photos auto-detection ─────────────────────────────────────────────────
+let _knownPhotoTotal = 0;
+
+function checkForNewPhotos(statsData) {
+  const serverTotal = statsData.total ?? 0;
+  if (_knownPhotoTotal === 0) {
+    _knownPhotoTotal = serverTotal;
+    return;
+  }
+  if (serverTotal > _knownPhotoTotal && !selectMode) {
+    const diff = serverTotal - _knownPhotoTotal;
+    document.getElementById('npb-msg').textContent =
+      `📸 ${diff} new photo${diff !== 1 ? 's' : ''} uploaded — click to refresh`;
+    document.getElementById('new-photos-bar').classList.add('visible');
+  }
+}
+
+async function dismissNewPhotos() {
+  document.getElementById('new-photos-bar').classList.remove('visible');
+  await loadPhotos();
+  await loadStats();
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────
-let activeSlug = '';   // tracks which event is currently live
-
 async function loadEvents() {
-  // Load both events list and current active event in parallel
   const [evRes, activeRes] = await Promise.all([
     fetch(`${API}?action=get_events&pass=${encodeURIComponent(password)}`),
     fetch(`${API}?action=get_active_event`),
@@ -708,8 +886,6 @@ async function loadEvents() {
 
   activeSlug = activeData.active_slug ?? '';
   document.getElementById('stat-events').textContent = evData.events?.length ?? 0;
-
-  // Update active event banner
   updateActiveBar(activeData);
 
   const list = document.getElementById('events-list');
@@ -725,36 +901,34 @@ async function loadEvents() {
     row.className = 'event-row';
     row.id = `ev-row-${ev.slug}`;
     if (isActive) row.style.borderColor = '#16a34a';
-
     row.innerHTML = `
       <span class="ev-icon">${isActive ? '🟢' : '📸'}</span>
       <div class="ev-info">
-        <div class="ev-name">${escHtml(ev.event_name)}${isActive ? ' <span style="font-size:.7rem;color:#4ade80;font-weight:600">● LIVE</span>' : ''}</div>
-        <div class="ev-meta">📷 ${escHtml(ev.studio_name)} &nbsp;·&nbsp; 🗓️ ${new Date(ev.created_at).toLocaleDateString('en-IN')} &nbsp;·&nbsp; <code style="font-size:.7rem">${escHtml(ev.slug)}</code></div>
+        <div class="ev-name">${esc(ev.event_name)}${isActive ? ' <span style="font-size:.7rem;color:#4ade80;font-weight:600">● LIVE</span>' : ''}</div>
+        <div class="ev-meta">📷 ${esc(ev.studio_name)} &nbsp;·&nbsp; 🗓️ ${new Date(ev.created_at).toLocaleDateString('en-IN')} &nbsp;·&nbsp; <code style="font-size:.7rem">${esc(ev.slug)}</code></div>
       </div>
       <span class="ev-badge">${ev.photo_count} photos</span>
       ${isActive
         ? `<button class="ev-btn is-active">✅ Active</button>`
-        : `<button class="ev-btn set-active" onclick="setActiveEvent('${escHtml(ev.slug)}')">▶ Set Active</button>`
+        : `<button class="ev-btn set-active" onclick="setActiveEvent('${esc(ev.slug)}')">▶ Set Active</button>`
       }
-      <button class="ev-btn" onclick="viewEventGallery('${escHtml(ev.slug)}')">🔗 Open</button>
-      <button class="ev-btn" onclick="loadQrForEvent('${escHtml(ev.event_name)}', '${escHtml(ev.studio_name)}', '${escHtml(ev.event_url)}')">📱 QR</button>
-      <button class="ev-btn danger" onclick="deleteEvent(${ev.id}, this)">🗑️</button>
+      <button class="ev-btn" onclick="viewEventGallery('${esc(ev.slug)}')">🔗 Open</button>
+      <button class="ev-btn" onclick="loadQrForEvent('${esc(ev.event_name)}','${esc(ev.studio_name)}','${esc(ev.event_url)}')">📱 QR</button>
+      <button class="ev-btn del-imgs" title="Delete all photos for this event (keeps the event)" onclick="deleteEventImages('${esc(ev.slug)}','${esc(ev.event_name)}',${ev.photo_count})">🗑️ Del Photos</button>
+      <button class="ev-btn danger" onclick="deleteEvent(${ev.id},this)" title="Delete event record only">✕ Event</button>
     `;
     list.appendChild(row);
   });
 }
 
 function updateActiveBar(activeData) {
-  const bar = document.getElementById('active-event-bar');
+  const bar  = document.getElementById('active-event-bar');
   const slug = activeData.active_slug ?? '';
-
   if (!slug) {
     bar.className = 'no-active-bar';
-    bar.innerHTML = '<span>⏸️</span> <span>No event is currently active — laptop processor is paused.</span>';
+    bar.innerHTML = '<span>⏸️</span><span>No event is currently active — laptop processor is paused.</span>';
     return;
   }
-
   const evName = activeData.event?.event_name ?? slug;
   const studio = activeData.event?.studio_name ?? '';
   bar.className = 'active-event-bar';
@@ -762,39 +936,30 @@ function updateActiveBar(activeData) {
     <span class="ae-dot"></span>
     <div>
       <div class="ae-label">🔴 Currently Live</div>
-      <div class="ae-name">${escHtml(evName)}</div>
-      ${studio ? `<div class="ae-slug">📷 ${escHtml(studio)}</div>` : ''}
+      <div class="ae-name">${esc(evName)}</div>
+      ${studio ? `<div class="ae-slug">📷 ${esc(studio)}</div>` : ''}
     </div>
-    <div class="ae-slug" style="margin-left:auto">${escHtml(slug)}</div>
+    <div class="ae-slug" style="margin-left:auto">${esc(slug)}</div>
     <button class="btn-deactivate" onclick="deactivateEvent()">⏹ Stop</button>
   `;
 }
 
 async function setActiveEvent(slug) {
   const fd = new FormData();
-  fd.append('action', 'set_active_event');
-  fd.append('pass',   password);
-  fd.append('slug',   slug);
-  const res  = await fetch(API, { method: 'POST', body: fd });
+  fd.append('action','set_active_event'); fd.append('pass',password); fd.append('slug',slug);
+  const res  = await fetch(API, { method:'POST', body:fd });
   const data = await res.json();
-  if (data.ok) {
-    toast(`✅ "${data.event_name}" is now active — laptop will sync within 30s`);
-    activeSlug = slug;
-    loadEvents();
-  } else {
-    toast('Error: ' + (data.error ?? 'Unknown'));
-  }
+  if (data.ok) { toast(`✅ "${data.event_name}" is now active`); activeSlug = slug; loadEvents(); }
+  else toast('Error: ' + (data.error ?? 'Unknown'));
 }
 
 async function deactivateEvent() {
-  if (!confirm('Stop the active event? The laptop processor will pause uploading.')) return;
+  if (!confirm('Stop the active event?')) return;
   const fd = new FormData();
-  fd.append('action', 'set_active_event');
-  fd.append('pass',   password);
-  fd.append('slug',   '');
-  await fetch(API, { method: 'POST', body: fd });
+  fd.append('action','set_active_event'); fd.append('pass',password); fd.append('slug','');
+  await fetch(API, { method:'POST', body:fd });
   activeSlug = '';
-  toast('⏸️ Event deactivated — laptop processor paused');
+  toast('⏸️ Event deactivated');
   loadEvents();
 }
 
@@ -804,136 +969,99 @@ async function submitNewEvent() {
   if (!eventName) { toast('Please enter an event name!'); return; }
 
   const fd = new FormData();
-  fd.append('action',      'create_event');
-  fd.append('pass',        password);
-  fd.append('event_name',  eventName);
-  fd.append('studio_name', studioName);
-
-  const res  = await fetch(API, { method: 'POST', body: fd });
+  fd.append('action','create_event'); fd.append('pass',password);
+  fd.append('event_name',eventName); fd.append('studio_name',studioName);
+  const res  = await fetch(API, { method:'POST', body:fd });
   const data = await res.json();
-
-  if (!data.ok) {
-    toast('Error: ' + (data.error ?? 'Unknown error'));
-    return;
-  }
+  if (!data.ok) { toast('Error: ' + (data.error ?? 'Unknown error')); return; }
 
   currentEventUrl  = data.event_url;
   currentEventSlug = data.slug;
-
   document.getElementById('generatedUrlText').textContent = data.event_url;
   document.getElementById('posterEventName').textContent  = eventName;
   document.getElementById('posterStudioName').textContent = studioName;
   document.getElementById('event-result').style.display   = 'block';
-
   toast('✅ Event created!');
   loadEvents();
 }
 
 async function deleteEvent(id, btn) {
-  if (!confirm('Delete this event? Photos will stay but won\'t be linked to this event.')) return;
+  if (!confirm('Delete this event?')) return;
   const fd = new FormData();
-  fd.append('action', 'delete_event');
-  fd.append('pass',   password);
-  fd.append('id',     id);
-  await fetch(API, { method: 'POST', body: fd });
+  fd.append('action','delete_event'); fd.append('pass',password); fd.append('id',id);
+  await fetch(API, { method:'POST', body:fd });
   toast('Event deleted');
   loadEvents();
 }
 
-function viewEventGallery(slug) {
-  window.open(`https://shanmuk27.github.io/?event=${slug}`, '_blank');
-}
-
-function copyUrl() {
-  navigator.clipboard.writeText(currentEventUrl).then(() => {
-    toast('✅ URL copied!');
-  });
-}
+function viewEventGallery(slug) { window.open(`https://shanmuk27.github.io/?event=${slug}`,'_blank'); }
+function copyUrl() { navigator.clipboard.writeText(currentEventUrl).then(() => toast('✅ URL copied!')); }
 
 // ── QR Poster ─────────────────────────────────────────────────────────────────
 function showQrModal() {
   if (!currentEventUrl) return;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=${encodeURIComponent(currentEventUrl)}`;
-  document.getElementById('qrImage').src = qrUrl;
+  document.getElementById('qrImage').src =
+    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=${encodeURIComponent(currentEventUrl)}`;
   document.getElementById('qr-modal').classList.add('open');
 }
-
 function loadQrForEvent(eventName, studioName, eventUrl) {
   currentEventUrl = eventUrl;
   document.getElementById('posterEventName').textContent  = eventName;
   document.getElementById('posterStudioName').textContent = studioName;
   showQrModal();
 }
-
-function closeQrModal() {
-  document.getElementById('qr-modal').classList.remove('open');
-}
-
+function closeQrModal() { document.getElementById('qr-modal').classList.remove('open'); }
 function printQr() {
-  // Wait for the QR image to finish loading before printing
   const img = document.getElementById('qrImage');
-  const doPrint = () => window.print();
-  if (img.complete) {
-    doPrint();
-  } else {
-    img.onload  = doPrint;
-    img.onerror = doPrint; // print anyway if image fails
-  }
+  if (img.complete) window.print(); else { img.onload = () => window.print(); img.onerror = () => window.print(); }
 }
-
 function downloadQr() {
-  const qrSrc = document.getElementById('qrImage').src;
   const a = document.createElement('a');
-  a.href = qrSrc;
-  a.download = 'qr-code.png';
-  a.target = '_blank';
-  a.click();
+  a.href = document.getElementById('qrImage').src;
+  a.download = 'qr-code.png'; a.target = '_blank'; a.click();
 }
 
 // ── Camera Status ─────────────────────────────────────────────────────────────
 async function loadCameraStatus() {
-  let data;
   try {
-    const res = await fetch(`${API}?action=camera_status`);
+    const res  = await fetch(`${API}?action=camera_status`);
     if (!res.ok) return;
-    data = await res.json();
-  } catch { return; }
+    const data = await res.json();
 
-  const cameras   = data.cameras ?? [];
-  const connected = data.connected_count ?? 0;
-  const list      = document.getElementById('camera-list');
-  const pulse     = document.getElementById('cam-pulse');
-  const countEl   = document.getElementById('stat-cam-count');
+    const cameras   = data.cameras ?? [];
+    const connected = data.connected_count ?? 0;
+    const list      = document.getElementById('camera-list');
+    const pulse     = document.getElementById('cam-pulse');
+    const countEl   = document.getElementById('stat-cam-count');
 
-  countEl.textContent = connected;
-  countEl.style.color = connected > 0 ? 'var(--connected)' : 'var(--disconn)';
-  if (connected > 0) pulse.classList.remove('no-cameras');
-  else pulse.classList.add('no-cameras');
+    countEl.textContent = connected;
+    countEl.style.color = connected > 0 ? 'var(--connected)' : 'var(--disconn)';
+    connected > 0 ? pulse.classList.remove('no-cameras') : pulse.classList.add('no-cameras');
+    document.getElementById('cam-last-update').textContent =
+      cameras.length > 0 ? `Updated ${timeAgo(data.server_time)}` : '';
 
-  document.getElementById('cam-last-update').textContent =
-    cameras.length > 0 ? `Updated ${timeAgo(data.server_time)}` : '';
-
-  list.innerHTML = '';
-  cameras.forEach(cam => {
-    const card = document.createElement('div');
-    card.className = `camera-card ${cam.status}`;
-    const lastPhoto = cam.last_photo_at ? `Last photo ${timeAgo(cam.last_photo_at)}` : 'No photos yet';
-    const statusLabel = { connected:'Connected', idle:'Idle', disconnected:'Disconnected' }[cam.status] ?? cam.status;
-    card.innerHTML = `
-      <div class="cam-icon">📷</div>
-      <div class="cam-info">
-        <div class="cam-name">${escHtml(cam.camera_name)}</div>
-        <div class="cam-sub">${escHtml(lastPhoto)}</div>
-        <div class="cam-status-badge ${cam.status}">${statusLabel}</div>
-      </div>
-      <div class="cam-right">
-        <div class="cam-count ${cam.status}">${cam.photos_session}</div>
-        <div class="cam-count-lbl">this session</div>
-        <div class="cam-count-lbl" style="margin-top:2px;color:var(--dim)">${cam.photos_total} total</div>
-      </div>
-    `;
-    list.appendChild(card);
-  });
+    list.innerHTML = '';
+    cameras.forEach(cam => {
+      const card = document.createElement('div');
+      card.className = `camera-card ${cam.status}`;
+      const lastPhoto   = cam.last_photo_at ? `Last photo ${timeAgo(cam.last_photo_at)}` : 'No photos yet';
+      const statusLabel = { connected:'Connected', idle:'Idle', disconnected:'Disconnected' }[cam.status] ?? cam.status;
+      card.innerHTML = `
+        <div class="cam-icon">📷</div>
+        <div class="cam-info">
+          <div class="cam-name">${esc(cam.camera_name)}</div>
+          <div class="cam-sub">${esc(lastPhoto)}</div>
+          <div class="cam-status-badge ${cam.status}">${statusLabel}</div>
+        </div>
+        <div class="cam-right">
+          <div class="cam-count ${cam.status}">${cam.photos_session}</div>
+          <div class="cam-count-lbl">this session</div>
+          <div class="cam-count-lbl" style="margin-top:2px;color:var(--dim)">${cam.photos_total} total</div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  } catch(e) {}
 }
 
 // ── File picker & queue ───────────────────────────────────────────────────────
@@ -942,6 +1070,7 @@ function addFiles(fileList) {
   renderQueue();
   document.getElementById('upload-btn').style.display = 'block';
 }
+
 function renderQueue() {
   const queue = document.getElementById('queue');
   queue.innerHTML = '';
@@ -949,42 +1078,63 @@ function renderQueue() {
     const div = document.createElement('div');
     div.className = 'queue-item';
     div.id = `qi-${i}`;
-    div.innerHTML = `<span class="name">${escHtml(f.name)}</span><span class="status" id="qs-${i}">${formatSize(f.size)}</span>`;
+    div.innerHTML = `
+      <span class="qi-name">${esc(f.name)}</span>
+      <span class="qi-size">${formatSize(f.size)}</span>
+      <div class="qi-progress-wrap"><div class="qi-progress-bar" id="qp-${i}"></div></div>
+      <span class="status" id="qs-${i}">${formatSize(f.size)}</span>
+    `;
     queue.appendChild(div);
   });
 }
 
-// ── Upload ────────────────────────────────────────────────────────────────────
+// ── Upload with Retry ─────────────────────────────────────────────────────────
+const MAX_RETRIES    = 3;
+const RETRY_DELAYS   = [2000, 5000, 10000]; // exponential-ish backoff
+
 async function uploadAll() {
   const btn = document.getElementById('upload-btn');
   btn.disabled = true;
 
   for (let i = 0; i < pendingFiles.length; i++) {
-    const status = document.getElementById(`qs-${i}`);
-    status.className = 'status uploading';
-    status.textContent = 'Uploading…';
+    const statusEl = document.getElementById(`qs-${i}`);
+    const progressEl = document.getElementById(`qp-${i}`);
+    const item = document.getElementById(`qi-${i}`);
+    item.classList.add('uploading');
+    statusEl.className = 'status uploading';
+    statusEl.textContent = 'Uploading…';
 
-    const fd = new FormData();
-    fd.append('action', 'upload');
-    fd.append('pass',   password);
-    fd.append('photo',  pendingFiles[i]);
-    // Attach current event slug if one is active
-    if (currentEventSlug) fd.append('event_slug', currentEventSlug);
+    let success = false;
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        if (attempt > 1) {
+          statusEl.className = 'status retry';
+          statusEl.textContent = `Retry ${attempt}/${MAX_RETRIES}…`;
+          await sleep(RETRY_DELAYS[attempt - 2]);
+        }
 
-    try {
-      const res  = await fetch(API, { method: 'POST', body: fd });
-      const data = await res.json();
-      if (data.ok) {
-        status.className = 'status done';
-        status.textContent = '✓ Done';
-      } else {
-        status.className = 'status fail';
-        status.textContent = '✗ ' + (data.error ?? 'Failed');
+        // Simulate progress (XHR for real progress)
+        const result = await uploadWithProgress(pendingFiles[i], i, progressEl);
+        if (result.ok) {
+          statusEl.className = 'status done';
+          statusEl.textContent = '✓ Uploaded';
+          if (progressEl) progressEl.style.width = '100%';
+          success = true;
+          break;
+        } else {
+          if (attempt === MAX_RETRIES) {
+            statusEl.className = 'status fail';
+            statusEl.textContent = '✗ ' + (result.error ?? 'Failed');
+          }
+        }
+      } catch(e) {
+        if (attempt === MAX_RETRIES) {
+          statusEl.className = 'status fail';
+          statusEl.textContent = e.message === 'Failed to fetch' ? '✗ No connection' : '✗ Error';
+        }
       }
-    } catch {
-      status.className = 'status fail';
-      status.textContent = '✗ Network error';
     }
+    item.classList.remove('uploading');
   }
 
   pendingFiles = [];
@@ -997,45 +1147,198 @@ async function uploadAll() {
   loadEvents();
 }
 
+function uploadWithProgress(file, index, progressEl) {
+  return new Promise((resolve, reject) => {
+    const fd = new FormData();
+    fd.append('action',  'upload');
+    fd.append('pass',    password);
+    fd.append('photo',   file);
+    const slugToUse = activeSlug || currentEventSlug;
+    if (slugToUse) fd.append('event_slug', slugToUse);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', API, true);
+
+    if (progressEl) {
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) {
+          progressEl.style.width = Math.round(e.loaded / e.total * 95) + '%';
+        }
+      };
+    }
+
+    xhr.onload = () => {
+      try { resolve(JSON.parse(xhr.responseText)); }
+      catch(e) { reject(new Error('Invalid response')); }
+    };
+    xhr.onerror = () => reject(new Error('Failed to fetch'));
+    xhr.send(fd);
+  });
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 // ── Photo grid ────────────────────────────────────────────────────────────────
 async function loadPhotos() {
   const container = document.getElementById('photo-grid');
   document.getElementById('grid-loading').textContent = 'Loading…';
   container.innerHTML = '';
+  allPhotos = [];
+  selectedIds.clear();
+  updateBulkToolbar();
+
   let page = 1, loaded = 0, total = Infinity;
+  const cameraParam = activeCamera ? `&camera=${encodeURIComponent(activeCamera)}` : '';
+
   while (loaded < total) {
-    const res  = await fetch(`${API}?action=images&page=${page}&limit=40`);
-    const data = await res.json();
-    total = data.total;
-    data.images.forEach(img => { container.appendChild(makeThumb(img)); loaded++; });
-    page++;
-    if (data.images.length === 0) break;
+    try {
+      const res  = await fetch(`${API}?action=images&page=${page}&limit=40${cameraParam}`);
+      const data = await res.json();
+      total = data.total;
+      data.images.forEach(img => {
+        allPhotos.push(img);
+        container.appendChild(makeThumb(img));
+        loaded++;
+      });
+      page++;
+      if (data.images.length === 0) break;
+    } catch(e) { break; }
   }
+
   document.getElementById('grid-loading').textContent = '';
   if (total === 0) document.getElementById('grid-loading').textContent = 'No photos yet.';
+  _knownPhotoTotal = total;   // sync known total so banner won't re-fire for already-loaded photos
 }
 
 function makeThumb(img) {
   const div = document.createElement('div');
   div.className = 'thumb';
+  div.dataset.id = img.id;
+
+  const camLabel = img.camera_name ? `📷 ${img.camera_name} · ` : '';
   div.innerHTML = `
     <img src="${img.url}" alt="" loading="lazy"/>
+    <div class="thumb-check"></div>
     <button class="del-btn" title="Delete">✕</button>
-    <div class="thumb-info">${formatSize(img.file_size)}</div>
+    <div class="thumb-info">${camLabel}${formatSize(img.file_size)}</div>
   `;
-  div.querySelector('.del-btn').onclick = () => deletePhoto(img.id, div);
+
+  div.querySelector('.del-btn').onclick = (e) => {
+    e.stopPropagation();
+    deletePhoto(img.id, div);
+  };
+  div.querySelector('.thumb-check').onclick = (e) => {
+    e.stopPropagation();
+    toggleSelect(img.id, div);
+  };
+  div.addEventListener('click', () => {
+    if (selectMode) toggleSelect(img.id, div);
+  });
+
   return div;
+}
+
+// ── Select Mode ───────────────────────────────────────────────────────────────
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  selectedIds.clear();
+
+  const photoGrid = document.getElementById('photo-grid');
+  const btn       = document.getElementById('btn-select-mode');
+
+  if (selectMode) {
+    photoGrid.classList.add('select-mode');
+    btn.classList.add('active');
+    btn.textContent = '✕ Exit Select';
+    document.getElementById('bulk-toolbar').classList.add('visible');
+  } else {
+    photoGrid.classList.remove('select-mode');
+    btn.classList.remove('active');
+    btn.textContent = '☑ Select';
+    document.getElementById('bulk-toolbar').classList.remove('visible');
+    // Clear all selections
+    document.querySelectorAll('.thumb.selected').forEach(t => t.classList.remove('selected'));
+  }
+  updateBulkToolbar();
+}
+
+function toggleSelect(id, el) {
+  if (selectedIds.has(id)) {
+    selectedIds.delete(id);
+    el.classList.remove('selected');
+  } else {
+    selectedIds.add(id);
+    el.classList.add('selected');
+  }
+  updateBulkToolbar();
+}
+
+function selectAll() {
+  const allSelected = selectedIds.size === allPhotos.length;
+  if (allSelected) {
+    // Deselect all
+    selectedIds.clear();
+    document.querySelectorAll('.thumb.selected').forEach(t => t.classList.remove('selected'));
+    document.getElementById('btn-select-all').textContent = 'Select all';
+  } else {
+    // Select all visible
+    allPhotos.forEach(img => selectedIds.add(img.id));
+    document.querySelectorAll('.thumb').forEach(t => t.classList.add('selected'));
+    document.getElementById('btn-select-all').textContent = 'Deselect all';
+  }
+  updateBulkToolbar();
+}
+
+function updateBulkToolbar() {
+  const count    = selectedIds.size;
+  const deleteBtn = document.getElementById('btn-bulk-delete');
+  document.getElementById('bulk-count').textContent = count === 0
+    ? 'No photos selected'
+    : `${count} photo${count !== 1 ? 's' : ''} selected`;
+  if (deleteBtn) deleteBtn.disabled = count === 0;
+}
+
+async function bulkDelete() {
+  const count = selectedIds.size;
+  if (count === 0) return;
+  if (!confirm(`Delete ${count} photo${count !== 1 ? 's' : ''}? This cannot be undone.`)) return;
+
+  const btn = document.getElementById('btn-bulk-delete');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+
+  const ids = [...selectedIds].join(',');
+  const fd  = new FormData();
+  fd.append('action', 'bulk_delete');
+  fd.append('pass',   password);
+  fd.append('ids',    ids);
+
+  try {
+    const res  = await fetch(API, { method:'POST', body:fd });
+    const data = await res.json();
+    if (data.ok) {
+      toast(`🗑️ ${data.deleted} photo${data.deleted !== 1 ? 's' : ''} deleted`);
+      selectedIds.clear();
+      await loadPhotos();
+      loadStats();
+    } else {
+      toast('Delete failed: ' + (data.error ?? 'Unknown'));
+    }
+  } catch(e) {
+    toast('Network error during delete');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🗑️ Delete selected';
+  }
 }
 
 async function deletePhoto(id, el) {
   if (!confirm('Delete this photo? This cannot be undone.')) return;
   const fd = new FormData();
-  fd.append('action', 'delete');
-  fd.append('pass',   password);
-  fd.append('id',     id);
-  const res  = await fetch(API, { method: 'POST', body: fd });
+  fd.append('action','delete'); fd.append('pass',password); fd.append('id',id);
+  const res  = await fetch(API, { method:'POST', body:fd });
   const data = await res.json();
-  if (data.ok) { el.remove(); toast('Photo deleted'); loadStats(); }
+  if (data.ok) { el.remove(); toast('Photo deleted'); loadStats(); allPhotos = allPhotos.filter(p => p.id !== id); }
   else toast('Delete failed: ' + (data.error ?? 'Unknown error'));
 }
 
@@ -1049,13 +1352,13 @@ function formatSize(bytes) {
 function timeAgo(dtStr) {
   if (!dtStr) return '—';
   const diff = Math.floor((Date.now() - new Date(dtStr)) / 1000);
-  if (diff < 5)    return 'just now';
-  if (diff < 60)   return diff + 's ago';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 5)     return 'just now';
+  if (diff < 60)    return diff + 's ago';
+  if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
   if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
   return Math.floor(diff / 86400) + 'd ago';
 }
-function escHtml(s) {
+function esc(s) {
   return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 let toastTimer;
@@ -1066,7 +1369,6 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
-// Close modal on backdrop click
 document.getElementById('qr-modal').addEventListener('click', function(e) {
   if (e.target === this) closeQrModal();
 });
